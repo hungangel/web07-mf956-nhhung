@@ -1,0 +1,63 @@
+@import url("./base/icon.css");
+@import url("./base/field-input.css");
+@import url("./common/format.css");
+
+/* @import url("./layout/menu.css"); */
+
+@import url("./layout/content.css");
+@import url("./layout/navigation.css");
+* {
+    font-family: notosans-regular;
+}
+
+body {
+    font-size: 13px;
+    color: #111111;
+    margin: 0;
+    overflow: auto;
+    text-overflow: ellipsis;
+    display: flex;
+}
+
+body #app {
+    display: flex;
+    width: 100%;
+}
+
+@font-face {
+    font-family: notosans-regular;
+    src: url("../assets/fonts/notosans-regular.2cb88a13.woff2");
+}
+
+@font-face {
+    font-family: notosans-bold;
+    src: url("../assets/fonts/notosans-bold.3ede5aff.woff2");
+}
+
+@font-face {
+    font-family: notosans-semibold;
+    src: url("../assets/fonts/notosans-semibold.df3e6dc4.woff2");
+}
+
+@font-face {
+    font-family: notosans-italic;
+    src: url("../assets/fonts/notosans-italic.1c1aaac9.woff2");
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+ ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+ ::-webkit-scrollbar-thumb {
+    background: #b8bcc3;
+    /* border-radius: 4px; */
+}
+
+ ::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}

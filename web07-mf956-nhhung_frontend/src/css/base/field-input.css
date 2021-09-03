@@ -1,0 +1,58 @@
+input {
+    border: 1px solid #babec5;
+    color: #3c3c3c;
+    outline: 0;
+}
+
+input::placeholder {
+    font-size: 11px;
+    color: #959595;
+}
+
+input:focus {
+    border: 1px solid #2ca01c;
+}
+
+.inputbox {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.field-input {
+    height: 32px;
+    width: 100%;
+    min-width: 50px;
+    padding: 6px 10px;
+    outline: none;
+    border-radius: 2px;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+.field-input:hover {
+    cursor: pointer;
+}
+
+.field-input.focus {
+    border-color: #01b075;
+}
+
+.field-input-icon {
+    position: relative;
+}
+
+.field-input-icon .input-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.field-input-icon input {
+    padding: 6px 22px 6px 12px;
+    background-repeat: no-repeat;
+    font-size: 13px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    line-height: 32px;
+}

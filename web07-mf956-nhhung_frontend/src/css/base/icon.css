@@ -1,0 +1,399 @@
+.icon-16 {
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    background-size: unset !important;
+}
+
+.icon-24 {
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    background-size: unset !important;
+}
+
+.icon-32 {
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+    background-size: unset !important;
+}
+
+.icon-36 {
+    background-repeat: no-repeat;
+    width: 36px;
+    height: 36px;
+    background-size: unset !important;
+}
+
+.icon-48 {
+    background-repeat: no-repeat;
+    width: 48px;
+    height: 48px;
+    background-size: unset !important;
+}
+
+.spr {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg") !important;
+}
+
+.i-logo {
+    src: url("https: //actappg1.misacdn.net/img/Logo_Module_TiengViet_White.66947422.svg");
+}
+
+.i-toggle {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -424px -86px !important;
+}
+
+.i-left-menu-logo {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -424px -86px !important;
+}
+
+.i-three-bar {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -843px -30px !important;
+}
+
+.i-refresh {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -423px -201px !important;
+}
+
+.i-refresh:hover {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -1097px -88px !important;
+}
+
+.i-excel {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -704px -200px !important;
+}
+
+.i-excel:hover {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -704px -256px !important;
+}
+
+.i-setting {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -88px -200px !important;
+}
+
+.i-bell {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -788px -30px;
+}
+
+.i-search {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -992px -360px;
+}
+
+.i-dashboard {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -30px -1628px !important;
+}
+
+.i-cash {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -73px -1628px !important;
+}
+
+.i-deposit {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -117px -1628px !important;
+}
+
+.i-buy {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -161px -1628px !important;
+}
+
+.i-sell {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -204px -1628px !important;
+}
+
+.i-invoice {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -249px -1628px !important;
+}
+
+.i-warehouse {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -291px -1628px !important;
+}
+
+.i-tool {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -336px -1628px !important;
+}
+
+.i-assets {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -378px -1630px !important;
+}
+
+.i-tax {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -423px -1630px !important;
+}
+
+.i-price {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -467px -1628px !important;
+}
+
+.i-sumary {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -510px -1628px !important;
+}
+
+.i-budget {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -378px -1659px !important;
+}
+
+.i-report {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -547px -1628px !important;
+}
+
+.i-analysis {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -204px -1664px !important;
+}
+
+
+/* ===================================================================================== */
+
+.i-down-arrow {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -1076px -32px !important;
+}
+
+.i-solid-arrow {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -552px -353px;
+}
+
+.i-blue-arrow {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -891px -359px;
+}
+
+
+/* =======================Modal ============================================================== */
+
+.i-close {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -144px -144px;
+}
+
+.i-question {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -89px -144px;
+}
+
+.i-blue-question {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -832px -462px;
+}
+
+.i-check {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -1224px -360px;
+}
+
+
+/* ==============Message======================================================================= */
+
+.i-error {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -752px -462px;
+}
+
+.i-warning {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -598px -463px;
+}
+
+.i-info {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -672px -462px;
+}
+
+.i-done-32 {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -288px -894px;
+}
+
+.i-done-36 {
+    background-image: url("../../assets/img/Sprites.64af8f61.svg");
+    background-position: -990px -462px;
+}
+
+
+/* ===============================General====================================================== */
+
+.i-loading {
+    background-image: url('../../assets/loading.svg');
+}
+
+
+/* ===================================================================================== */
+
+.icon-add {
+    background-image: url("../../assets/old_icon/add.png");
+}
+
+.icon-avatar {
+    background-image: url("../../assets/old_icon/avatar-default.png");
+}
+
+.icon-down {
+    background-image: url("../../assets/old_icon/btn-down.svg");
+}
+
+.icon-up {
+    background-image: url("../../assets/old_icon/btn-up.svg");
+}
+
+.icon-prev {
+    background-image: url("../../assets/old_icon/btn-prev-page.svg");
+}
+
+.icon-next {
+    background-image: url("../../assets/old_icon/btn-next-page.svg");
+}
+
+.icon-first {
+    background-image: url("../../assets/old_icon/btn-firstpage.svg");
+}
+
+.icon-last {
+    background-image: url("../../assets/old_icon/btn-lastpage.svg");
+}
+
+.icon-clear {
+    background-image: url("../../assets/old_icon/x.svg");
+}
+
+.icon-dashboard {
+    background-image: url("../../assets/old_icon/dashboard.png");
+}
+
+.icon-buy {
+    background-image: url("../../assets/old_icon/dashboard.png");
+}
+
+.icon-employee {
+    background-image: url("../../assets/old_icon/dic-employee.png");
+}
+
+.icon-document {
+    background-image: url("../../assets/old_icon/document-online.png");
+}
+
+.icon-option {
+    background-image: url("../../assets/old_icon/option.png");
+}
+
+.icon-radio {
+    background-image: url("../../assets/old_icon/radio.svg");
+}
+
+.icon-radio-checked {
+    background-image: url("../../assets/old_icon/radio-checked.png");
+}
+
+.icon-refresh {
+    background-image: url("../../assets/old_icon/refresh.png");
+}
+
+.icon-report {
+    background-image: url("../../assets/old_icon/report.png");
+}
+
+.icon-save {
+    background-image: url("../../assets/old_icon/save.png");
+}
+
+.icon-search {
+    background-image: url("../../assets/old_icon/search.png");
+}
+
+.icon-setting {
+    background-image: url("../../assets/old_icon/setting.png");
+}
+
+.icon-close {
+    background-image: url("../../assets/old_icon/x.svg");
+}
+
+.icon-toggle {
+    background-image: url("../../assets/old_img/toggle.png");
+}
+
+.icon-notification {
+    background-image: url("../../assets/old_icon/notification.png");
+}
+
+.icon-white-prev {
+    background-image: url("../../assets/old_icon/white-prev.png");
+}
+
+.icon-checked {
+    background-color: #2ca01c;
+    background-image: url("../../assets/old_icon/tick.png");
+}
+
+.icon-warning {
+    background-image: url("../../assets/old_icon/warning.png");
+}
+
+.icon-notify {
+    background-image: url("../../assets/old_icon/warning.png");
+}
+
+.icon-danger {
+    background-image: url("../../assets/old_icon/danger.png");
+}
+
+.icon-toast-danger {
+    background-image: url('../../assets/old_icon/toast-danger.png');
+}
+
+.icon-toast-warning {
+    background-image: url('../../assets/old_icon/toast-warning.png');
+}
+
+.icon-toast-check {
+    background-image: url('../../assets/old_icon/toast-check.png');
+}
+
+.icon-toast-i {
+    background-image: url('../../assets/old_icon/toast-i.png');
+}
+
+.icon-red-cross {
+    background-image: url('../../assets/old_icon/red-cross.png');
+}
+
+.icon-orange-cross {
+    background-image: url('../../assets/old_icon/orange-cross.png');
+}
+
+.icon-green-cross {
+    background-image: url('../../assets/old_icon/green-cross.png');
+}
+
+.icon-blue-cross {
+    background-image: url('../../assets/old_icon/blue-cross.png');
+}
+
+.icon-tooltip-arrow {
+    background-image: url('../../assets/old_icon/tooltip-arrow.png');
+}
