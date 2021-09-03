@@ -112,15 +112,26 @@
                   :originValue="employee.IdentityNumber"
                   :validate="triggerValidate"
                 />
-                <FieldInputLabel
-                  labelText="Ngày cấp"
-                  :maxLength="100"
-                  :inputType="'date'"
-                  subClass="w-40p"
-                  v-model="employee.IdentityDate"
-                  :originValue="employee.IdentityDate"
-                  :validate="triggerValidate"
-                />
+
+                <div class="flex-col">
+                  <label for="">Ngày sinh</label>
+                  <DatePicker
+                    v-model="employee.DateOfBirth"
+                    :format="'DD/MM/YYYY'"
+                    :value-type="'YYYY-MM-DD'"
+                    placeholder="DD/MM/YYYY"
+                    :disabled-date="(date) => date >= new Date()"
+                    style="width: 100%; outline-color: #2ca01c"
+                  >
+                    <FieldInputLabel
+                      :inputType="'date'"
+                      subClass="w-40p pd-r-6"
+                      v-model="employee.DateOfBirth"
+                      :originValue="employee.DateOfBirth"
+                      :validate="triggerValidate"
+                    />
+                  </DatePicker>
+                </div>
               </div>
               <div class="md-input-row flex">
                 <FieldInputLabel
