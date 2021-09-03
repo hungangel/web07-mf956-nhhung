@@ -106,7 +106,9 @@ namespace MISA.AMIS.Core.Services
                         if (existingEntites.Any())
                         {
                             if (propName == $"{_entityType}ID")
+                            {
                                 continue;
+                            }
                             return new List<string>() { "3", propName, propValue };
                         }
                     }

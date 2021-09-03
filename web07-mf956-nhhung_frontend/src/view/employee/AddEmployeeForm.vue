@@ -433,12 +433,14 @@ export default {
             //Mặc địnhh kiểm tra hành động có phải là lưu hay update, gọi hàm tương ứng
             //Thực hiện khi không có lỗi
             if (
-              (action.includes("SaveThen") || action.includes("AddThen")) &&
+              (action.includes("SaveThen") || action.includes("UpdateThen")) &&
               vm.firstErrorField == null
             ) {
               if (vm.formMode == 0 || vm.formMode == 2) {
+                console.log("do save");
                 vm.doSaveEntity(action);
               } else if (vm.formMode == 1) {
+                console.log("do update");
                 vm.doUpdateEntity(action);
               }
             }

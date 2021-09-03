@@ -27,7 +27,7 @@ export default {
     subClass: String,
     inputItems: String,
     originValue: String,
-    triggerUpdate:Boolean,
+    triggerUpdate: Boolean,
   },
   data() {
     return {
@@ -51,13 +51,17 @@ export default {
       }
     },
   },
+  mounted() {},
   watch: {
     originValue: function() {
       this.currentValue = this.originValue;
     },
-    triggerUpdate:function(){
-      this.currentValue=0;
-    }
+    triggerUpdate: function() {
+      if (!this.originValue) {
+        this.currentValue = 0;
+      }
+      this.$emit("input", 0);
+    },
   },
 };
 </script>

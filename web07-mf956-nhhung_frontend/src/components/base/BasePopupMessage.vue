@@ -98,6 +98,7 @@ export default {
           break;
         case "CONFIRM":
           vm.showBtnArr = [true, false];
+          vm.btnConfirmText = ResourceVI.ButtonText.YES;
           vm.btnCancelText = ResourceVI.ButtonText.NO;
           vm.icon = "i-warning";
           break;

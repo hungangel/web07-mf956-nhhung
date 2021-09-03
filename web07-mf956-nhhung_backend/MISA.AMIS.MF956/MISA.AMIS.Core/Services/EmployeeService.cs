@@ -43,8 +43,12 @@ namespace MISA.AMIS.Core.Services
                     //Gọi kết nối csdl thực hiện lưu dữ liệu
                     _serviceResult = base.Add(employee);
                 }
+                else
+                {
+                    return base.CreateErrorValidateResult(customValidateRes);
+                }
+                return _serviceResult;
 
-                return base.CreateErrorValidateResult(customValidateRes);
             }
             catch (Exception ex)
             {
