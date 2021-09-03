@@ -20,7 +20,7 @@
           itemName="pageSizeText"
           :textDisable="true"
           :inputItems="pageSizeOptions"
-          :defaultId="pageSizeOptions[0]['pageSizeValue']"
+          :originValue="pageSizeOptions[0]['pageSizeValue'] + ''"
           :defaultName="pageSizeOptions[0]['pageSizeText']"
           :updateCombobox="updateCombobox"
           :numberOfCol="1"

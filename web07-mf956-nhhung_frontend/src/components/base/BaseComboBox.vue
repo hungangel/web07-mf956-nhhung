@@ -103,13 +103,14 @@ export default {
     inputItems: Array,
     updateCombobox: Boolean,
     numberOfCol: Number,
+    defaultId: Number,
   },
   data() {
     return {
       items: [],
       currentId: "-1",
       closed: true,
-      defaultId: "-1",
+
       currentFocus: -1,
       inputValue: null,
       errorMessage: "",
@@ -324,7 +325,6 @@ export default {
             .get(`${Constant.LocalUrl}/${vm.myurl}`)
             .then((response) => {
               vm.items = response.data;
-              vm.initChoice();
             })
             .catch((error) => {
               eventBus.$emit(
@@ -336,6 +336,9 @@ export default {
             });
         })();
       }
+      setTimeout(() => {
+        vm.initChoice();
+      }, 1000);
     },
 
     /**
