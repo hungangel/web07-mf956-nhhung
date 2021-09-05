@@ -114,9 +114,9 @@
                 />
 
                 <div class="flex-col">
-                  <label for="">Ngày sinh</label>
+                  <label for="">Ngày cấp</label>
                   <DatePicker
-                    v-model="employee.DateOfBirth"
+                    v-model="employee.IdentityDate"
                     :format="'DD/MM/YYYY'"
                     :value-type="'YYYY-MM-DD'"
                     placeholder="DD/MM/YYYY"
@@ -126,8 +126,8 @@
                     <FieldInputLabel
                       :inputType="'date'"
                       subClass="w-40p pd-r-6"
-                      v-model="employee.DateOfBirth"
-                      :originValue="employee.DateOfBirth"
+                      v-model="employee.IdentityDate"
+                      :originValue="employee.IdentityDate"
                       :validate="triggerValidate"
                     />
                   </DatePicker>
@@ -540,7 +540,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "CommonError",
-              "DANGER",
+              "ALERT",
               "CheckExistingCode",
               error
             );
@@ -568,7 +568,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "GetNewCodeFailed",
-              "DANGER",
+              "ALERT",
               "GetNewCode",
               error
             );
@@ -596,7 +596,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "GetInfoFailed",
-              "DANGER",
+              "ALERT",
               "GetInfo",
               error
             );

@@ -44,7 +44,7 @@ export default {
       this.toastMessage = ResourceVI.UserMsg[actionResult];
 
       switch (toastType) {
-        case "DANGER":
+        case "ALERT":
           vm.toastIcon = "i-error";
           vm.toastIconClose = "icon-red-cross";
           break;

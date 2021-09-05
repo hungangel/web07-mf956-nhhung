@@ -224,7 +224,7 @@ export default {
               vm.mousePos=0;
               vm.checkTotalSelected();
             } else if (response.status == 204) {
-              eventBus.$emit("showToastMessage", "NoContent");
+              eventBus.$emit("showToastMessage", "NoContent", "ALERT");
               this.$emit("onTableLoadDone", 0, 1);
             }
             eventBus.$emit("hideLoadingScreen");
@@ -234,6 +234,7 @@ export default {
           eventBus.$emit(
             "showToastMessage",
             "LoadDataFailed",
+            "ALERT",
             "LoadTableData",
             error
           );
@@ -332,7 +333,7 @@ export default {
           this.loadTableData();
         })
         .catch((error) => {
-          eventBus.$emit("showToastMessage", "DeleteFailed", "DANGER", error);
+          eventBus.$emit("showToastMessage", "DeleteFailed", "ALERT", error);
         });
     },
 
@@ -352,7 +353,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "GetNewCodeFailed",
-              "DANGER",
+              "ALERT",
               error
             );
           });
@@ -378,7 +379,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "GetInfoFailed",
-              "DANGER",
+              "ALERT",
               error
             );
           });

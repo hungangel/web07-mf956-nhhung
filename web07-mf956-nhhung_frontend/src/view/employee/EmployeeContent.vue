@@ -336,7 +336,7 @@ export default {
           eventBus.$emit(
             "showToastMessage",
             "ExportFileFailed",
-            "DANGER",
+            "ALERT",
             "ExportFileFailed",
             error
           );
@@ -359,7 +359,7 @@ export default {
           eventBus.$emit(
             "showToastMessage",
             "DeleteFailed",
-            "DANGER",
+            "ALERT",
             "DeleteFailed",
             error
           );
