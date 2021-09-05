@@ -132,7 +132,10 @@ export default {
      * Thực hiện focus vào chính ô input.
      */
     doFocus(forceFocus) {
-      if (forceFocus) this.$refs.myself.focus();
+      if (forceFocus) {
+        this.$refs.myself.focus();
+        this.openItems();
+      }
       else {
         if (this.autoFocus) {
           this.$refs.myself.focus();

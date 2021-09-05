@@ -433,7 +433,6 @@ export default {
     processAddFormResponse(action, choice) {
       let vm = this;
       if (choice == "CONFIRM") {
-        console.log(action);
 
         switch (action) {
           //Trường hợp confirm khi thông báo lỗi, focus ô bị lỗi
@@ -448,10 +447,8 @@ export default {
               vm.firstErrorField == null
             ) {
               if (vm.formMode == 0 || vm.formMode == 2) {
-                console.log("do save");
                 vm.doSaveEntity(action);
               } else if (vm.formMode == 1) {
-                console.log("do update");
                 vm.doUpdateEntity(action);
               }
             }
@@ -754,12 +751,6 @@ export default {
       })();
     },
     mounted() {
-      // window.addEventListener(
-      //   "keydown",
-      //   function(e) {
-      //     console.log( "window", e.code);
-      //   }.bind(this)
-      // );
     },
   },
   created() {

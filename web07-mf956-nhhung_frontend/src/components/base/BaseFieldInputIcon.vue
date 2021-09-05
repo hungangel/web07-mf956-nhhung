@@ -49,11 +49,7 @@ export default {
   },
   watch: {
     originValue: function() {
-      try {
-        this.modelData = this.originValue;
-      } catch (error) {
-        console.log("invalid data", error);
-      }
+      this.modelData = this.originValue;
     },
   },
 };
