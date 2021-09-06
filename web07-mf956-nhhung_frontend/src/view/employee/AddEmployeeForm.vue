@@ -310,11 +310,11 @@ export default {
 
       if (!errorField) {
         let isValid = false;
-
         //Kiểm tra mã trùng
         isValid = await vm.checkExistingCode(vm.employee.EmployeeCode);
+
         if (isValid) {
-          //Nếu không có lỗi xảy ra  , hiện popup xác nhận lưu
+          //Nếu không có lỗi xảy ra, hiện popup xác nhận lưu
           let popupMessage = {
             messageType: "CONFIRM",
             textBody: FormatFn.formatString(
@@ -322,12 +322,7 @@ export default {
               vm.employee.FullName
             ),
           };
-          eventBus.$emit(
-            "showPopupMessage",
-            "FromAddForm",
-            popupMessage,
-            formAction
-          );
+          vm.showPopupMessage(popupMessage, formAction);
         } else {
           //Nếu mã bị trùng
           let popupMessage = {
@@ -338,13 +333,10 @@ export default {
               vm.employee.EmployeeCode
             ),
           };
+
+          //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
           vm.firstErrorField = "validateFieldCode";
-          eventBus.$emit(
-            "showPopupMessage",
-            "FromAddForm",
-            popupMessage,
-            formAction
-          );
+          vm.showPopupMessage(popupMessage, formAction);
         }
       } else {
         //Nếu kết quả validate không hợp lệ
@@ -371,12 +363,7 @@ export default {
           messageType: "FULL",
           textBody: ResourceVI.PopupMessage["CloseModifedForm"],
         };
-        eventBus.$emit(
-          "showPopupMessage",
-          "FromAddForm",
-          popupMessage,
-          formAction
-        );
+        this.showPopupMessage(popupMessage, formAction);
       } else {
         this.resetEntityData();
         this.$emit("hideAddForm");
@@ -669,8 +656,12 @@ export default {
         eventBus.$emit("showToastMessage", actionResult, "NOTIFY");
       } else {
         responseData = response.response.data;
-        vm.createPopupMessage(actionResult, isValid, responseData);
+        vm.createMessageFromResponse(actionResult, isValid, responseData);
       }
+    },
+
+    showPopupMessage(message, action) {
+      eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
     },
 
     /**
@@ -678,7 +669,7 @@ export default {
      * Nếu không hiện thị thông báo mặc định theo hành động gọi
      * CreatedBy: NHHung(01/09)
      */
-    createPopupMessage(actionResult, isValid, responseData) {
+    createMessageFromResponse(actionResult, isValid, responseData) {
       let messageType = "",
         textBody = "";
 
@@ -699,12 +690,7 @@ export default {
       }
 
       let popupMessage = { messageType, textBody };
-      eventBus.$emit(
-        "showPopupMessage",
-        "FromAddForm",
-        popupMessage,
-        messageType
-      );
+      this.showPopupMessage(popupMessage);
     },
     //#endregion
 

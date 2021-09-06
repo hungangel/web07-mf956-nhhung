@@ -30,7 +30,7 @@
               iconName="i-search"
               placeHolder="Tìm theo Mã, Tên hoặc Số điện thoại"
               v-model="searchboxFilter"
-              @input="callFilterFunction"
+              @input="onUpdatePagingInfo"
             />
             <ButtonIcon @btnClick="reloadTable" iconName="icon-24 i-refresh" />
             <ButtonIcon @btnClick="exportFile" iconName="icon-24 i-excel" />
@@ -163,6 +163,7 @@ export default {
     hideAddForm() {
       this.isHidden = true;
       this.formMode = -1;
+      this.$refs.ctable.loadTableData();
     },
 
     /**
@@ -247,28 +248,15 @@ export default {
 
     /**
      * Nghe sự kiện bấm vào nút chuyển trang
-     * Gọi component table tải trang tương ứngo
      **/
     onUpdatePagingInfo(pageNumber, pageSize) {
       this.pageNumber = pageNumber;
       this.pageSize = pageSize;
-      this.callFilterFunction();
-    },
-
-    /**
-     * Nghe sự kiện bấm vào nút chuyển trang
-     * Gọi component table tải trang tương ứng
-     **/
-    callFilterFunction() {
       this.filters = {
         searchboxFilter: this.searchboxFilter,
       };
+      //Thay đổi trạng thái để kích hoạt sự kiện tải lại trang trong table
       this.filterUpdate = !this.filterUpdate;
-      // this.$refs.ctable.loadTableData();
-
-      // setTimeout(() => {
-      //   eventBus.$emit("showLoadingScreen",);
-      // }, 2000);
     },
 
     /**
@@ -301,7 +289,6 @@ export default {
           "BankAccountNumber",
           "BankName",
         ];
-      vm.entities = {};
 
       let filterUrl =
         `https://localhost:44346/api/v1/Employees/Export?` +
@@ -312,7 +299,6 @@ export default {
       }
 
       axios
-        // add responseType
         .post(filterUrl, propNames, {
           responseType: "blob",
         })
@@ -322,14 +308,13 @@ export default {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const a = document.createElement("a");
             a.href = url;
-            const filename = `file.xlsx`;
+            const filename = `DSNV.xlsx`;
             a.setAttribute("download", filename);
             document.body.appendChild(a);
             a.click();
             a.remove();
           } else {
             eventBus.$emit("showToastMessage", "NoContent");
-            //todo
           }
         })
         .catch((error) => {
