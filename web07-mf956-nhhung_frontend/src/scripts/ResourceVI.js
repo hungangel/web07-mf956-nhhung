@@ -89,7 +89,7 @@ export default class ResourceVI {
         NOT_NULL: "{0} không được để trống.",
         INVALID_FORMAT: "{0} sai định dạng.",
         CONTAIN_ALPHABETS_ONLY: "{0} chỉ chứa các chữ cái.",
-        DUPLICATED: "{0} <{1}> đã tồn tại!",
+        DUPLICATED: "{0} <{1}> đã tồn tại! Vui lòng kiểm tra lại.",
     }
 
 

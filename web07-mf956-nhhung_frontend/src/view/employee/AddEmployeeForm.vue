@@ -100,7 +100,6 @@
                   subClass="w-60p pd-l-10"
                   v-model="employee.Gender"
                   :originValue="employee.Gender + ''"
-                  :triggerUpdate="triggerUpdate"
                 />
               </div>
               <div class="md-input-row flex">
@@ -278,7 +277,6 @@ export default {
       isShowed: true,
       updateCombobox: true,
       triggerValidate: true,
-      triggerUpdate: true,
       firstErrorField: null,
       entity: "Employee",
       firstErrorMessage: "",
@@ -340,6 +338,7 @@ export default {
               vm.employee.EmployeeCode
             ),
           };
+          vm.firstErrorField = "validateFieldCode";
           eventBus.$emit(
             "showPopupMessage",
             "FromAddForm",
@@ -455,6 +454,7 @@ export default {
             }
             break;
         }
+        vm.focusOnFirstErrorField();
         return;
       }
       //Trường hợp từ chối thì đóng form và reset dữ liệu trên form
@@ -469,10 +469,10 @@ export default {
      * Thông báo kết quả thực hiện
      * CreatedBy: NHHung(31/08)
      */
-    doSaveEntity(formAction) {
+    async doSaveEntity(formAction) {
       let vm = this,
         isValid = true;
-      axios
+      await axios
         .post(`${Constant.BaseUrl}/${vm.entityUrl}/`, vm.employee)
         .then((response) => {
           vm.processSaveResponse("AddSuccess", isValid, response);
@@ -489,11 +489,14 @@ export default {
      * THông báo kết quả thực hiện
      * CreatedBy: NHHung(31/08)
      */
-    doUpdateEntity(formAction) {
+    async doUpdateEntity(formAction) {
       let vm = this,
         isValid = true;
-      axios
-        .put(`${Constant.BaseUrl}/${vm.entityUrl}/${vm.employeeID}`, vm.employee)
+      await axios
+        .put(
+          `${Constant.BaseUrl}/${vm.entityUrl}/${vm.employeeID}`,
+          vm.employee
+        )
         .then((response) => {
           vm.processSaveResponse("UpdateSuccess", isValid, response);
           vm.processAfterSave(formAction);
@@ -716,7 +719,6 @@ export default {
         //Autofocus vào ô có ref= "autofocus"
         vm.isShowed = !vm.isShowed;
         vm.updateCombobox = !vm.updateCombobox;
-        vm.triggerUpdate = !vm.triggerUpdate;
         let entityInfo = {},
           newEntity = {},
           newEntityCode = "";

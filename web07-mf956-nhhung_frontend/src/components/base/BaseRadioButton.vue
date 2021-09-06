@@ -27,26 +27,24 @@ export default {
     subClass: String,
     inputItems: String,
     originValue: String,
-    triggerUpdate: Boolean,
   },
   data() {
     return {
-      currentValue: 0,
+      currentValue: null,
       items: ["Nam", "Nữ", "Khác"],
     };
   },
   methods: {
     checkitem(radioIndex) {
-      if (this.currentValue == radioIndex) {
-        this.currentValue = null;
-      } else {
-        this.currentValue = radioIndex;
-      }
+      if (this.currentValue == radioIndex) this.currentValue = null;
+      else this.currentValue = radioIndex;
+
       this.$emit("input", this.currentValue);
     },
 
     radioItemOnKeydown(event, radioIndex) {
       if (event.key == "Enter" || event.key == " ") {
+        event.preventDefault();
         this.checkitem(radioIndex);
       }
     },
@@ -54,13 +52,9 @@ export default {
   mounted() {},
   watch: {
     originValue: function() {
-      this.currentValue = this.originValue;
-    },
-    triggerUpdate: function() {
-      if (!this.originValue) {
-        this.currentValue = 0;
+      if (this.originValue) {
+        this.currentValue = this.originValue;
       }
-      this.$emit("input", 0);
     },
   },
 };

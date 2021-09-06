@@ -111,8 +111,10 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     doFocus(forceFocus) {
-      if (forceFocus) this.$refs.myself.focus();
-      else {
+      if (forceFocus) {
+        this.$refs.myself.focus();
+        this.hasError = true;
+      } else {
         if (this.autoFocus) {
           this.$refs.myself.focus();
         }

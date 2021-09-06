@@ -133,9 +133,9 @@ export default {
      */
     doFocus(forceFocus) {
       if (forceFocus) {
+        this.hasError = true;
         this.$refs.myself.focus();
-      }
-      else {
+      } else {
         if (this.autoFocus) {
           this.$refs.myself.focus();
         }
