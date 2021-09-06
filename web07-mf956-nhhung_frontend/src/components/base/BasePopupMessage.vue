@@ -44,7 +44,7 @@
   </div>
 </template>
 <script>
-import ResourceVI from "../../js/ResourceVI.js";
+import ResourceVI from "../../scripts/ResourceVI.js";
 import { eventBus } from "../../main.js";
 import Button from "./BaseButton.vue";
 export default {

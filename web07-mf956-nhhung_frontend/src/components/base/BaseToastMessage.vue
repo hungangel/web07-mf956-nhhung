@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import ResourceVI from "../../js/ResourceVI";
+import ResourceVI from "../../scripts/ResourceVI";
 import { eventBus } from "../../main";
 export default {
   name: "ToastMessage",

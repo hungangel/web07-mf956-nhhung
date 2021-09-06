@@ -15,7 +15,10 @@
               :class="[thItem.thClass, { 'bd-left-dot': thIndex > 0 }]"
             >
               <div v-if="thItem.thClass == 'checkboxdiv'">
-                <Checkbox @cbclick="selectAllTR()" :isChecked="allSelected" />
+                <Checkbox
+                  @cbclick="toggleSelectAllTR()"
+                  :isChecked="allSelected"
+                />
               </div>
 
               {{ thItem.fieldText }}
@@ -101,7 +104,7 @@
 
 <script>
 import axios from "axios";
-import FormatFn from "../../js/FormatFunction";
+import FormatFn from "../../scripts/FormatFunction";
 import { eventBus } from "../../main.js";
 import OptionDropdown from "./optiondropdown/BaseContextButton.vue";
 import Checkbox from "./BaseCheckbox.vue";
@@ -134,7 +137,6 @@ export default {
       currentHover: -1,
       selectedSet: new Set(),
       allSelected: false,
-      totalSelected: 0,
       mousePos: 0,
       itemId: `${this.entity}ID`,
     };
@@ -221,7 +223,7 @@ export default {
                 resData.TotalPage
               );
               eventBus.$emit("showToastMessage", "LoadDataSuccess", "NOTIFY");
-              vm.mousePos=0;
+              vm.mousePos = 0;
               vm.checkTotalSelected();
             } else if (response.status == 204) {
               eventBus.$emit("showToastMessage", "NoContent", "ALERT");
@@ -287,7 +289,7 @@ export default {
      * Đánh dấu tất cả các hàng là được chọn / không chọn
      * CreatedBy: NHHung(29/08)
      */
-    selectAllTR() {
+    toggleSelectAllTR() {
       let vm = this,
         tmpSelectedSet = vm.selectedSet;
 
@@ -301,7 +303,6 @@ export default {
         tmpSelectedSet.clear();
       }
       vm.selectedSet = tmpSelectedSet;
-      vm.checkTotalSelected();
       vm.$emit("checkOnItem", vm.checkTotalSelected());
     },
 
@@ -330,7 +331,8 @@ export default {
         .then(() => {
           eventBus.$emit("showToastMessage", "DeleteComplete", "NOTIFY");
           vm.selectedSet.clear();
-          this.loadTableData();
+          vm.$emit("checkOnItem", 0);
+          vm.loadTableData();
         })
         .catch((error) => {
           eventBus.$emit("showToastMessage", "DeleteFailed", "ALERT", error);
@@ -371,17 +373,12 @@ export default {
         axios
           .get(`${Constant.LocalUrl}/${vm.myurl}/${replicateId}`)
           .then((res) => {
-            let newEntity = res.data;
-            newEntity["EmployeeCode"] = "";
-            resolve(newEntity);
+            // let newEntity = res.data;
+            // newEntity["EmployeeCode"] = "";
+            resolve(res.data);
           })
           .catch((error) => {
-            eventBus.$emit(
-              "showToastMessage",
-              "GetInfoFailed",
-              "ALERT",
-              error
-            );
+            eventBus.$emit("showToastMessage", "GetInfoFailed", "ALERT", error);
           });
       });
     },

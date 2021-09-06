@@ -75,11 +75,11 @@
 import axios from "axios";
 import { mixin as clickaway } from "vue-clickaway";
 import Constant from "../../api/config/APIConfig";
-import FormatFn from "../../js/FormatFunction";
+import FormatFn from "../../scripts/FormatFunction";
 import Tooltip from "./BaseTooltip.vue";
-import ResourceVI from "../../js/ResourceVI";
+import ResourceVI from "../../scripts/ResourceVI";
 import { eventBus } from "../../main";
-import EntityModel from "../../js/model/EntityModel";
+import EntityModel from "../../scripts/model/EntityModel";
 export default {
   mixins: [clickaway],
   name: "BaseCombobox",
@@ -134,7 +134,6 @@ export default {
     doFocus(forceFocus) {
       if (forceFocus) {
         this.$refs.myself.focus();
-        this.openItems();
       }
       else {
         if (this.autoFocus) {

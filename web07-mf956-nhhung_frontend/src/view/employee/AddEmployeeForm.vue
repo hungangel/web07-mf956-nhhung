@@ -22,7 +22,7 @@
                 <FieldInputLabel
                   labelText="Mã"
                   :isRequired="true"
-                  :maxLength="10"
+                  :maxLength="20"
                   :autoFocus="true"
                   :isShowed="isShowed"
                   dataType="EmployeeCode"
@@ -106,7 +106,7 @@
               <div class="md-input-row flex">
                 <FieldInputLabel
                   labelText="Số CMND"
-                  :maxLength="100"
+                  :maxLength="25"
                   subClass="w-60p pd-r-6"
                   v-model="employee.IdentityNumber"
                   :originValue="employee.IdentityNumber"
@@ -136,7 +136,7 @@
               <div class="md-input-row flex">
                 <FieldInputLabel
                   labelText="Nơi cấp"
-                  :maxLength="100"
+                  :maxLength="255"
                   v-model="employee.IdentityPlace"
                   :originValue="employee.IdentityPlace"
                 />
@@ -160,7 +160,7 @@
                 <div class="md-input-row w-50p pd-r-6">
                   <FieldInputLabel
                     labelText="ĐT di động"
-                    :maxLength="255"
+                    :maxLength="50"
                     v-model="employee.MobilePhoneNumber"
                     :originValue="employee.MobilePhoneNumber"
                   />
@@ -168,7 +168,7 @@
                 <div class="md-input-row w-50p pd-r-6">
                   <FieldInputLabel
                     labelText="ĐT cố định"
-                    :maxLength="255"
+                    :maxLength="50"
                     v-model="employee.LandlinePhoneNumber"
                     :originValue="employee.LandlinePhoneNumber"
                   />
@@ -178,7 +178,7 @@
                 <div class="md-input-row  w-50p">
                   <FieldInputLabel
                     labelText="Email"
-                    :maxLength="255"
+                    :maxLength="100"
                     v-model="employee.Email"
                     :originValue="employee.Email"
                     :validate="triggerValidate"
@@ -191,7 +191,7 @@
                 <div class="md-input-row w-50p pd-r-6">
                   <FieldInputLabel
                     labelText="Tài khoản ngân hàng"
-                    :maxLength="255"
+                    :maxLength="25"
                     v-model="employee.BankAccountNumber"
                     :originValue="employee.BankAccountNumber"
                   />
@@ -249,14 +249,14 @@
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import axios from "axios";
-import FormatFn from "../../js/FormatFunction.js";
+import FormatFn from "../../scripts/FormatFunction.js";
 import Checkbox from "../../components/base/BaseCheckbox.vue";
 import RadioButton from "../../components/base/BaseRadioButton.vue";
 import FieldInputLabel from "../../components/base/BaseFieldInputLabel.vue";
 import ComboBox from "../../components/base/BaseComboBox.vue";
 import Button from "../../components/base/BaseButton.vue";
 import { eventBus } from "../../main.js";
-import ResourceVI from "../../js/ResourceVI.js";
+import ResourceVI from "../../scripts/ResourceVI.js";
 import Constant from "../../api/config/APIConfig.js";
 export default {
   mixins: [FormatFn],

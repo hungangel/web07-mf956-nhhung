@@ -86,8 +86,8 @@ import FieldInputIcon from "../../components/base/BaseFieldInputIcon.vue";
 import PageNavigation from "../../components/base/BasePageNavigation.vue";
 import Table from "../../components/base/BaseTable.vue";
 import AddEmployeeForm from "./AddEmployeeForm.vue";
-import FormatFn from "../../js/FormatFunction.js";
-import ResourceVI from "../../js/ResourceVI.js";
+import FormatFn from "../../scripts/FormatFunction.js";
+import ResourceVI from "../../scripts/ResourceVI.js";
 import Constant from "../../api/config/APIConfig.js";
 export default {
   name: "EmployeePage",

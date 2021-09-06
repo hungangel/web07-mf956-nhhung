@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import ResourceVI from "../../../js/ResourceVI";
+import ResourceVI from "../../../scripts/ResourceVI";
 export default {
   name: "OptionItem",
   props: {

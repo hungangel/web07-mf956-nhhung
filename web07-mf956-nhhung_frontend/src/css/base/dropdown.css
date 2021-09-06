@@ -43,7 +43,6 @@
 }
 
 .dropdown .arrow-zone {
-    margin-left: 16px;
     height: 32px;
     width: 32px;
     box-sizing: border-box;
@@ -59,58 +58,4 @@
     background-size: 16px 16px;
     box-sizing: border-box;
     border-radius: 2px;
-}
-
-
-/* .dropdown:focus .itemwrapper {
-    display: block !important;
-} */
-
-.dropdown .itemwrapper {
-    position: absolute;
-    /* top: 32px; */
-    display: none;
-    margin-top: 1px;
-    max-height: 200px;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 2px;
-    line-height: 32px;
-    padding-top: 2px 0;
-    box-sizing: border-box;
-    box-shadow: 0px 0px 5px 1px #e5e5e5;
-    scroll-snap-align: end;
-    overflow: scroll;
-}
-
-.dropdown .itemwrapper .item {
-    font-size: 13px;
-    width: 100%;
-    padding-left: 36px;
-    background-image: unset;
-    background-size: 16px 16px;
-    background-position: 10px center;
-    background-repeat: no-repeat;
-    background-color: #fff;
-    box-sizing: border-box;
-}
-
-.dropdown .itemwrapper .item:hover {
-    background-color: #E9EBEE;
-}
-
-.dropdown .itemwrapper .item.highligted {
-    background-color: #E9EBEE;
-}
-
-.dropdown .itemwrapper .item:active {
-    background-color: #2ca01c;
-    color: #fff;
-    background-image: url("../../assets/old_icon/tick.png");
-}
-
-.dropdown .itemwrapper .item.selected {
-    background-color: #2ca01c;
-    color: #fff;
-    background-image: url("../../assets/old_icon/tick.png");
 }

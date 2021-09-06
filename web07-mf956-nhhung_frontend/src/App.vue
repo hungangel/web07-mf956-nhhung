@@ -9,48 +9,30 @@
     </div>
     <LoadingScreen />
     <PopupMessage />
-    <ToastMessage
-      :isHiddenToastMessage="isHiddenToastMessage"
-      :toastMessage="toastMessage"
-      @close="closeToastMessage"
-    />
+    <ToastMessage />
   </div>
 </template>
 
 <script>
-// import { eventBus } from "./main.js";
 import LoadingScreen from "./components/base/BaseLoadingScreen.vue";
 import ToastMessage from "./components/base/BaseToastMessage.vue";
 import PopupMessage from "./components/base/BasePopupMessage.vue";
 import Menu from "./components/layout/menu/TheMenu.vue";
 import Header from "./components/layout/TheHeader.vue";
-// import Content from "./components/layout/TheContent.vue";
 export default {
   name: "App",
   components: {
     LoadingScreen,
     Menu,
     Header,
-    // Content,
     ToastMessage,
     PopupMessage,
   },
   data() {
     return {
       showLoadingScreen: true,
-      isHiddenWarning: true,
-      isHiddenToastMessage: true,
-      toastMessage: {},
-      action: "",
-      popupMessage: {},
     };
   },
-  methods: {
-    closeToastMessage() {
-      this.isHiddenToastMessage = true;
-    },
-  },
-  created() {},
 };
 </script>
 

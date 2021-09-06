@@ -67,11 +67,6 @@
     border-radius: 2px;
 }
 
-
-/* .combobox:focus .itemwrapper {
-    display: block !important;
-} */
-
 .combobox .itemwrapper {
     position: absolute;
     border: 1px solid #babec5;

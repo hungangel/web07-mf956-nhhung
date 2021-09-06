@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import ValidateFn from "../../js/ValidateFn";
-import FormatFn from "../../js/FormatFunction";
+import ValidateFn from "../../scripts/ValidateFn";
+import FormatFn from "../../scripts/FormatFunction";
 import Tooltip from "./BaseTooltip.vue";
 export default {
   name: "BaseInputLabel",
