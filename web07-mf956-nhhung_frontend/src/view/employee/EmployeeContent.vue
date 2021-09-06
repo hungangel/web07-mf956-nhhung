@@ -458,6 +458,18 @@ export default {
         fieldText: "CHI NHÁNH TK NGÂN HÀNG",
         thClass: "a-left minw-250",
       },
+      {
+        fieldName: "MobilePhoneNumber",
+        dataType: "Text",
+        fieldText: "ĐT DI ĐỘNG",
+        thClass: "a-left minw-150",
+      },
+      {
+        fieldName: "LandlinePhoneNumber",
+        dataType: "Text",
+        fieldText: "ĐT CỐ ĐỊNH",
+        thClass: "a-left minw-150",
+      },
     ];
   },
 };

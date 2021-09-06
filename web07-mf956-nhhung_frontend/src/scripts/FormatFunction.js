@@ -1,5 +1,6 @@
 import EntityModel from "./model/EntityModel";
 import CommonFn from "./CommonFunction";
+import LocalConfig from "./LocalConfig";
 class FormatFn {
     formatTableData(entities, entityType) {
         let vm = this;
@@ -23,7 +24,7 @@ class FormatFn {
         let datax = data + '';
         switch (dataType) {
             case 'Date':
-                return this.formatDateDMY(datax)
+                return this.formatViewDate(datax)
             case 'Number':
                 return this.formatMoney(datax)
             case 'Enum':
@@ -76,13 +77,16 @@ class FormatFn {
      * @param {} thisdate Xâu javascript date
      * @returns Xâu ở dạng dd/MM/yyyy
      */
-    formatDateDMY(thisdate) {
+    formatViewDate(thisdate) {
         thisdate += "";
         if (thisdate.length == 19 || thisdate.length == 10) {
             let dateArr = thisdate.split("T");
             if (dateArr[0].length == 10) {
                 let date = new Date(dateArr[0]);
-                return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
+                if (LocalConfig.DateFormat == "DD/MM/YYYY")
+                    return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
+                else if (LocalConfig.DateFormat == "MM/DD/YYYY") return ("0" + (date.getMonth() + 1)).slice(-2) + '/' + ("0" + (date.getDate())).slice(-2) + '/' + date.getFullYear();
+
             }
         }
         return "";

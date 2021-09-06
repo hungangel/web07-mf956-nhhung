@@ -79,9 +79,9 @@
                   <label for="">Ngày sinh</label>
                   <DatePicker
                     v-model="employee.DateOfBirth"
-                    :format="'DD/MM/YYYY'"
+                    :format="defaultDateFormat"
                     :value-type="'YYYY-MM-DD'"
-                    placeholder="DD/MM/YYYY"
+                    :placeholder="defaultDateFormat"
                     :disabled-date="(date) => date >= new Date()"
                     style="width: 100%; outline-color: #2ca01c"
                   >
@@ -117,9 +117,9 @@
                   <label for="">Ngày cấp</label>
                   <DatePicker
                     v-model="employee.IdentityDate"
-                    :format="'DD/MM/YYYY'"
+                    :format="defaultDateFormat"
                     :value-type="'YYYY-MM-DD'"
-                    placeholder="DD/MM/YYYY"
+                    :placeholder="defaultDateFormat"
                     :disabled-date="(date) => date >= new Date()"
                     style="width: 100%; outline-color: #2ca01c"
                   >
@@ -258,6 +258,7 @@ import Button from "../../components/base/BaseButton.vue";
 import { eventBus } from "../../main.js";
 import ResourceVI from "../../scripts/ResourceVI.js";
 import Constant from "../../api/config/APIConfig.js";
+import LocalConfig from "../../scripts/LocalConfig.js";
 export default {
   mixins: [FormatFn],
   name: "EmployeeForm",
@@ -273,6 +274,7 @@ export default {
     return {
       originEntity: {},
       employee: {},
+      defaultDateFormat: LocalConfig.DateFormat,
       isShowed: true,
       updateCombobox: true,
       triggerValidate: true,
@@ -433,7 +435,6 @@ export default {
     processAddFormResponse(action, choice) {
       let vm = this;
       if (choice == "CONFIRM") {
-
         switch (action) {
           //Trường hợp confirm khi thông báo lỗi, focus ô bị lỗi
           case "ValidateOnSave":
@@ -750,8 +751,7 @@ export default {
         }
       })();
     },
-    mounted() {
-    },
+    mounted() {},
   },
   created() {
     let vm = this;
