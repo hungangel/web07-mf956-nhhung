@@ -40,7 +40,7 @@
       <Table
         ref="ctable"
         :entity="entity"
-        myurl="Employees"
+        entityUrl="Employees"
         :contentExpanded="contentExpanded"
         :warningResponse="warningResponse"
         :thList="thList"
@@ -64,7 +64,7 @@
     </div>
     <AddEmployeeForm
       :isHidden="isHidden"
-      myurl="Employees"
+      entityUrl="Employees"
       :employeeID="selectedEntityID"
       :formMode="formMode"
       :toggleForm="toggleForm"
@@ -106,7 +106,7 @@ export default {
   data() {
     return {
       entity: "Employee",
-      myurl: "Employees",
+      entityUrl: "Employees",
       //filter props
       searchboxFilter: "",
       updateTime: 0,
@@ -350,7 +350,7 @@ export default {
     async doDeleteEntity() {
       let vm = this;
       await axios
-        .delete(`${Constant.LocalUrl}/${vm.myurl}/${vm.selectedEntityID}`)
+        .delete(`${Constant.BaseUrl}/${vm.entityUrl}/${vm.selectedEntityID}`)
         .then(() => {
           eventBus.$emit("showToastMessage", "DeleteComplete");
           vm.$refs.ctable.loadTableData();

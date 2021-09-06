@@ -122,7 +122,7 @@ export default {
     pageSize: Number,
     filters: Object,
     filterUpdate: Boolean,
-    myurl: String,
+    entityUrl: String,
     entity: String,
   },
   components: {
@@ -198,7 +198,7 @@ export default {
       vm.entities = {};
       eventBus.$emit("showLoadingScreen");
 
-      let filterUrl = `${Constant.LocalUrl}/${vm.myurl}/Filter?pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}`;
+      let filterUrl = `${Constant.BaseUrl}/${vm.entityUrl}/Filter?pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}`;
       if (searchboxFilter) {
         filterUrl += `&searchKey=${searchboxFilter.trim()}`;
       }
@@ -327,7 +327,7 @@ export default {
         pendingItems.push(deleteId);
       }
       await axios
-        .post(`${Constant.LocalUrl}/${vm.myurl}/Multiple/Delete`, pendingItems)
+        .post(`${Constant.BaseUrl}/${vm.entityUrl}/Multiple/Delete`, pendingItems)
         .then(() => {
           eventBus.$emit("showToastMessage", "DeleteComplete", "NOTIFY");
           vm.selectedSet.clear();
@@ -347,7 +347,7 @@ export default {
       let vm = this;
       return new Promise((resolve) => {
         axios
-          .get(`${Constant.LocalUrl}/${vm.myurl}/NewCode`)
+          .get(`${Constant.BaseUrl}/${vm.entityUrl}/NewCode`)
           .then((response) => {
             resolve(response.data);
           })
@@ -371,7 +371,7 @@ export default {
       let vm = this;
       return new Promise((resolve) => {
         axios
-          .get(`${Constant.LocalUrl}/${vm.myurl}/${replicateId}`)
+          .get(`${Constant.BaseUrl}/${vm.entityUrl}/${replicateId}`)
           .then((res) => {
             // let newEntity = res.data;
             // newEntity["EmployeeCode"] = "";

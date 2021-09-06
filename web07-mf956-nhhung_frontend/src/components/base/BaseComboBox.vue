@@ -96,7 +96,7 @@ export default {
     itemName: String,
     cbDirection: String,
     textDisable: Boolean,
-    myurl: String,
+    entityUrl: String,
     entity: String,
     defaultName: String,
     originValue: String,
@@ -321,10 +321,10 @@ export default {
       if (vm.inputItems) {
         vm.items = vm.inputItems;
       }
-      if (vm.myurl) {
+      if (vm.entityUrl) {
         (async () => {
           await axios
-            .get(`${Constant.LocalUrl}/${vm.myurl}`)
+            .get(`${Constant.BaseUrl}/${vm.entityUrl}`)
             .then((response) => {
               vm.items = response.data;
             })

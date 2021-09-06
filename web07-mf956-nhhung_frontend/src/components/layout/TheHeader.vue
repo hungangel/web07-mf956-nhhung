@@ -4,7 +4,7 @@
       <div class="content-toggle icon-24 i-three-bar"></div>
       <div class="store-selector">
         <Dropdown
-          myurl=""
+          entityUrl=""
           itemId="StoreId"
           itemName="StoreName"
           originValue="0+''"

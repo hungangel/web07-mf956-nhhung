@@ -50,7 +50,7 @@
                   subClass="w-100p"
                   itemId="DepartmentID"
                   itemName="DepartmentName"
-                  myurl="Departments"
+                  entityUrl="Departments"
                   entity="Department"
                   ddDirection="top-32"
                   :isRequired="true"
@@ -291,7 +291,7 @@ export default {
     toggleForm: Boolean,
     warningResponse: String,
     thList: Object,
-    myurl: String,
+    entityUrl: String,
   },
   methods: {
     //#region Sự kiện trên các nút / components
@@ -473,7 +473,7 @@ export default {
       let vm = this,
         isValid = true;
       axios
-        .post(`${Constant.LocalUrl}/${vm.myurl}/`, vm.employee)
+        .post(`${Constant.BaseUrl}/${vm.entityUrl}/`, vm.employee)
         .then((response) => {
           vm.processSaveResponse("AddSuccess", isValid, response);
           vm.processAfterSave(formAction);
@@ -493,7 +493,7 @@ export default {
       let vm = this,
         isValid = true;
       axios
-        .put(`${Constant.LocalUrl}/${vm.myurl}/${vm.employeeID}`, vm.employee)
+        .put(`${Constant.BaseUrl}/${vm.entityUrl}/${vm.employeeID}`, vm.employee)
         .then((response) => {
           vm.processSaveResponse("UpdateSuccess", isValid, response);
           vm.processAfterSave(formAction);
@@ -514,7 +514,7 @@ export default {
       return new Promise((resolve) => {
         axios
           .get(
-            `${Constant.LocalUrl}/${vm.myurl}/CheckExist?entityCode=${entityCode}`
+            `${Constant.BaseUrl}/${vm.entityUrl}/CheckExist?entityCode=${entityCode}`
           )
           .then((response) => {
             if (response.status == 200) {
@@ -556,7 +556,7 @@ export default {
       let vm = this;
       return new Promise((resolve) => {
         axios
-          .get(`${Constant.LocalUrl}/${vm.myurl}/NewCode`)
+          .get(`${Constant.BaseUrl}/${vm.entityUrl}/NewCode`)
           .then((response) => {
             // vm.$set(vm.employee, `${vm.entity}Code`, response.data);
             // vm.assignOriginEntity();
@@ -583,7 +583,7 @@ export default {
       let vm = this;
       return new Promise((resolve) => {
         axios
-          .get(`${Constant.LocalUrl}/${vm.myurl}/${vm.employeeID}`)
+          .get(`${Constant.BaseUrl}/${vm.entityUrl}/${vm.employeeID}`)
           .then((response) => {
             let foundEntity = response.data;
             // vm.employee = FormatFn.formatEntityData(foundEntity);
