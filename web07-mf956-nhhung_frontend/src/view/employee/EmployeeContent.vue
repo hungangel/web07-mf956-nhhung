@@ -175,7 +175,7 @@ export default {
 
     /**
      * Thay đổi chế độ của form chi tiết
-     * crby
+     * CreatedBy: NHHung(30/08)
      */
     changeFormMode(newMode) {
       this.formMode = newMode;
