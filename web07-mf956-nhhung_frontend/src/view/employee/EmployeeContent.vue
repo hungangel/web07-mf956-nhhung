@@ -86,7 +86,7 @@ import FieldInputIcon from "../../components/base/BaseFieldInputIcon.vue";
 import PageNavigation from "../../components/base/BasePageNavigation.vue";
 import Table from "../../components/base/BaseTable.vue";
 import AddEmployeeForm from "./AddEmployeeForm.vue";
-import FormatFn from "../../scripts/formatfunction.js";
+import FormatFn from "../../scripts/common/formatfunction.js";
 import ResourceVI from "../../scripts/resource.js";
 import URL from "../../api/config/api_config.js";
 import DefautlConfig from "../../scripts/defautlconfig.js";

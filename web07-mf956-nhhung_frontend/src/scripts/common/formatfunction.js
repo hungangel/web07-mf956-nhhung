@@ -1,5 +1,5 @@
-import EntityModel from "./model/entitymodel";
-import DefautlConfig from "./defautlconfig";
+import EntityModel from "../model/entitymodel";
+import DefautlConfig from "../defautlconfig";
 import commonfunction from './commonfunction'
 class FormatFn {
     formatTableData(entities, entityType) {

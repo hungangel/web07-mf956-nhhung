@@ -75,7 +75,7 @@
 import axios from "axios";
 import { mixin as clickaway } from "vue-clickaway";
 import URL from "../../api/config/api_config";
-import FormatFn from "../../scripts/formatfunction";
+import FormatFn from "../../scripts/common/formatfunction";
 import Tooltip from "./BaseTooltip.vue";
 import ResourceVI from "../../scripts/resource";
 import { eventBus } from "../../main";

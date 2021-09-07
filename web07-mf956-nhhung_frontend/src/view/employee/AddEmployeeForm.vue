@@ -251,7 +251,7 @@
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import axios from "axios";
-import FormatFn from "../../scripts/formatfunction";
+import FormatFn from "../../scripts/common/formatfunction";
 import Checkbox from "../../components/base/BaseCheckbox.vue";
 import RadioButton from "../../components/base/BaseRadioButton.vue";
 import FieldInputLabel from "../../components/base/BaseFieldInputLabel.vue";
@@ -658,24 +658,6 @@ export default {
 
         return {};
       }
-
-      // let vm = this;
-      // return new Promise((resolve) => {
-      //   axios
-      //     .get(`${URL.BASE_URL}/${vm.entityUrl}/NewCode`)
-      //     .then((response) => {
-      //       resolve(response.data);
-      //     })
-      //     .catch((error) => {
-      //       eventBus.$emit(
-      //         "showToastMessage",
-      //         "GetNewCodeFailed",
-      //         "ALERT",
-      //         "GetNewCode",
-      //         error
-      //       );
-      //     });
-      // });
     },
 
     /**
@@ -701,23 +683,6 @@ export default {
 
         return {};
       }
-      // return new Promise((resolve) => {
-      //   axios
-      //     .get(`${URL.BASE_URL}/${vm.entityUrl}/${vm.employeeID}`)
-      //     .then((response) => {
-      //       let foundEntity = response.data;
-      //       resolve(foundEntity);
-      //     })
-      //     .catch((error) => {
-      //       eventBus.$emit(
-      //         "showToastMessage",
-      //         "GetInfoFailed",
-      //         "ALERT",
-      //         "GetInfo",
-      //         error
-      //       );
-      //     });
-      // });
     },
 
     /**

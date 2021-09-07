@@ -11,7 +11,7 @@
 .content {
     position: relative;
     height: calc(100% - 48px - 24px);
-    padding: 0 30px 0 20px;
+    padding: 0 20px 10px 20px;
     background-color: #F4F5F8;
     -webkit-transition-duration: 0.5s;
 }
@@ -127,7 +127,7 @@
 }
 
 .content .table-wrapper {
-    height: calc(100vh - 244px);
+    height: calc(100vh - 254px);
     width: calc(100% - 23.5px);
     background-color: #ffffff;
     position: relative;

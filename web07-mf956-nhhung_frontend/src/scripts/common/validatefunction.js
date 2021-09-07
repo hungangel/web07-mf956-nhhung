@@ -1,4 +1,4 @@
-import ResourceVI from "./resource";
+import ResourceVI from "../resource";
 
 class ValidateFn {
     /**

@@ -101,7 +101,7 @@
 
 <script>
 import axios from "axios";
-import FormatFn from "../../scripts/formatfunction";
+import FormatFn from "../../scripts/common/formatfunction";
 import { eventBus } from "../../main.js";
 import OptionDropdown from "./optiondropdown/BaseContextButton.vue";
 import Checkbox from "./BaseCheckbox.vue";
