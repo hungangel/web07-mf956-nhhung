@@ -50,9 +50,6 @@
                 v-if="thItem.thClass == 'checkboxdiv'"
                 :isChecked="selectedSet.has(entity[itemId])"
               />
-              <div v-else-if="thItem.fieldName == 'No'">
-                {{ (pageNumber - 1) * pageSize + entityIndex + 1 }}
-              </div>
               <div v-else>
                 {{ entity[thItem.fieldName] }}
               </div>
@@ -82,7 +79,7 @@
           >
             <td class=" flex jc-space-ar">
               <OptionDropdown
-                :optionItemName="'employee'"
+                :entityClass="entityClass"
                 :defaultOptionText="'Sửa'"
                 :optionItemValue="entity[itemId]"
                 @arrowOnClick="arrowOnClick"
@@ -96,7 +93,7 @@
     <OptionMenu
       :mousePos="mousePos"
       :selectedEntityId="selectedEntityId"
-      :optionEntity="'employee'"
+      :entityClass="entityClass"
       @optionOnClick="optionOnClick"
     />
   </div>
@@ -104,12 +101,13 @@
 
 <script>
 import axios from "axios";
-import FormatFn from "../../scripts/FormatFunction";
+import FormatFn from "../../scripts/formatfunction";
 import { eventBus } from "../../main.js";
 import OptionDropdown from "./optiondropdown/BaseContextButton.vue";
 import Checkbox from "./BaseCheckbox.vue";
 import OptionMenu from "./optiondropdown/BaseContextMenu.vue";
-import Constant from "../../api/config/APIConfig.js";
+import URL from "../../api/config/api_config.js";
+import { HTTP_STATUS } from "../../scripts/enum/enumgeneral";
 export default {
   name: "BaseTable",
   props: {
@@ -123,7 +121,7 @@ export default {
     filters: Object,
     filterUpdate: Boolean,
     entityUrl: String,
-    entity: String,
+    entityClass: String,
   },
   components: {
     OptionDropdown,
@@ -138,7 +136,7 @@ export default {
       selectedSet: new Set(),
       allSelected: false,
       mousePos: 0,
-      itemId: `${this.entity}ID`,
+      itemId: `${this.entityClass}ID`,
     };
   },
   methods: {
@@ -187,67 +185,65 @@ export default {
     },
 
     /**
-     * Gọi API lấy danh sách nhân viên theo tiêu chí lọc , hiển thị dữ liệu
+     * Gọi hàm lấy và hiển thị dữ liệu cho danh sách
+     * CreatedBy: NHHung(29/08)
+     */
+    async reloadTableData() {
+      let vm = this;
+
+      try {
+        eventBus.$emit("showLoadingScreen");
+        vm.entities = [];
+        let response = await vm.getTableData();
+
+        if (response && response.status == HTTP_STATUS.Ok) {
+          //Có dữ liệu trả về, định dạng dữ liệu hiện thị
+          let resData = response.data;
+          vm.entities = FormatFn.formatTableData(
+            resData.Entities,
+            vm.entityClass
+          );
+
+          //Emit thông tin phân trang hiện tại lên Content
+          this.$emit("onTableLoadDone", resData.TotalRecord, resData.TotalPage);
+          eventBus.$emit("showToastMessage", "LoadDataSuccess", "NOTIFY");
+          vm.mousePos = 0;
+          vm.checkTotalSelected();
+        } else if (response && response.status == HTTP_STATUS.NoContent) {
+          //Dữ liệu trả về rỗng
+          eventBus.$emit("showToastMessage", "NoContent", "ALERT");
+          this.$emit("onTableLoadDone", 0, 1);
+        }
+      } catch (error) {
+        eventBus.$emit(
+          "showToastMessage",
+          "LoadDataFailed",
+          "ALERT",
+          "LoadTableData",
+          error
+        );
+      }
+      eventBus.$emit("hideLoadingScreen");
+
+      setTimeout(() => {
+        eventBus.$emit("hideLoadingScreen");
+      }, 10000);
+    },
+
+    /**
+     * Gọi API lấy danh sách nhân viên theo tiêu chí lọc, thông tin phân trang
      * Cập nhật số trang, bản ghi
      * CreatedBy: NHHung(29/08)
      */
-    async loadTableData() {
+    async getTableData() {
       let vm = this,
-        searchboxFilter = vm.filters.searchboxFilter;
+        searchKey = vm.filters.searchKey;
 
-      vm.entities = {};
-      eventBus.$emit("showLoadingScreen");
-
-      let filterUrl = `${Constant.BaseUrl}/${vm.entityUrl}/Filter?pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}`;
-      if (searchboxFilter) {
-        filterUrl += `&searchKey=${searchboxFilter.trim()}`;
+      let filterUrl = `${URL.BASE_URL}/${vm.entityUrl}/Filter?pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}`;
+      if (searchKey) {
+        filterUrl += `&searchKey=${searchKey.trim()}`;
       }
-
-      await axios
-        .get(filterUrl)
-        .then((response) => {
-          if (response) {
-            vm.entities = [];
-
-            if (response.status == 200) {
-              let resData = response.data;
-              vm.entities = FormatFn.formatTableData(
-                resData.Entities,
-                vm.entity
-              );
-
-              //Emit thông tin phân trang hiện tại lên Content
-              this.$emit(
-                "onTableLoadDone",
-                resData.TotalRecord,
-                resData.TotalPage
-              );
-              eventBus.$emit("showToastMessage", "LoadDataSuccess", "NOTIFY");
-              vm.mousePos = 0;
-              vm.checkTotalSelected();
-            } else if (response.status == 204) {
-              eventBus.$emit("showToastMessage", "NoContent", "ALERT");
-              this.$emit("onTableLoadDone", 0, 1);
-            }
-            eventBus.$emit("hideLoadingScreen");
-          }
-        })
-        .catch((error) => {
-          eventBus.$emit(
-            "showToastMessage",
-            "LoadDataFailed",
-            "ALERT",
-            "LoadTableData",
-            error
-          );
-          eventBus.$emit("hideLoadingScreen");
-        })
-        .finally(() => {
-          //Ẩn màn hình loading sau thời gian đủ lâu
-          setTimeout(() => {
-            eventBus.$emit("hideLoadingScreen");
-          }, 8000);
-        });
+      return axios.get(filterUrl);
     },
 
     /**
@@ -271,17 +267,21 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     checkTotalSelected() {
-      let vm = this,
-        isAllSelected = true,
-        selectedCount = vm.selectedSet.size;
-      vm.entities.forEach((entity) => {
-        if (!vm.selectedSet.has(entity[vm.itemId])) {
-          isAllSelected = false;
-        }
-      });
-
-      vm.allSelected = isAllSelected;
-      return selectedCount;
+      try {
+        let vm = this,
+          isAllSelected = true,
+          selectedCount = vm.selectedSet.size;
+        vm.entities.forEach((entity) => {
+          if (!vm.selectedSet.has(entity[vm.itemId])) {
+            isAllSelected = false;
+          }
+        });
+        //Cập nhật trạng thái nếu tât cả các ô đã được chon
+        vm.allSelected = isAllSelected;
+        return selectedCount;
+      } catch (error) {
+        eventBus.$emit("showToastMessage", "CommonError", "ALERT", "", error);
+      }
     },
 
     /**
@@ -290,20 +290,23 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     toggleSelectAllTR() {
-      let vm = this,
-        tmpSelectedSet = vm.selectedSet;
+      try {
+        let vm = this,
+          tmpSelectedSet = vm.selectedSet;
 
-      vm.allSelected = !vm.allSelected;
+        vm.allSelected = !vm.allSelected;
 
-      if (vm.allSelected) {
-        vm.entities.forEach((entity) => {
-          tmpSelectedSet.add(entity[vm.itemId]);
-        });
-      } else {
-        tmpSelectedSet.clear();
+        if (vm.allSelected) {
+          vm.entities.forEach((entity) => {
+            tmpSelectedSet.add(entity[vm.itemId]);
+          });
+        } else tmpSelectedSet.clear();
+
+        vm.selectedSet = tmpSelectedSet;
+        vm.$emit("checkOnItem", vm.checkTotalSelected());
+      } catch (error) {
+        eventBus.$emit("showToastMessage", "CommonError", "ALERT", "", error);
       }
-      vm.selectedSet = tmpSelectedSet;
-      vm.$emit("checkOnItem", vm.checkTotalSelected());
     },
 
     /**
@@ -311,7 +314,7 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     dbClickOnTR(itemId) {
-      this.optionOnClick("ReqEdit", itemId);
+      this.optionOnClick("RequestEdit", itemId);
     },
 
     /**
@@ -327,12 +330,12 @@ export default {
         pendingItems.push(deleteId);
       }
       await axios
-        .post(`${Constant.BaseUrl}/${vm.entityUrl}/Multiple/Delete`, pendingItems)
+        .post(`${URL.BASE_URL}/${vm.entityUrl}/Multiple/Delete`, pendingItems)
         .then(() => {
           eventBus.$emit("showToastMessage", "DeleteComplete", "NOTIFY");
           vm.selectedSet.clear();
           vm.$emit("checkOnItem", 0);
-          vm.loadTableData();
+          vm.reloadTableData();
         })
         .catch((error) => {
           eventBus.$emit("showToastMessage", "DeleteFailed", "ALERT", error);
@@ -343,11 +346,11 @@ export default {
      * Gọi API lấy mã nhân viên mới và trả về mã mới nhất
      * CreatedBy: NHHung(29/08)
      */
-    getNewEmployeeCode() {
+    getNewCode() {
       let vm = this;
       return new Promise((resolve) => {
         axios
-          .get(`${Constant.BaseUrl}/${vm.entityUrl}/NewCode`)
+          .get(`${URL.BASE_URL}/${vm.entityUrl}/NewCode`)
           .then((response) => {
             resolve(response.data);
           })
@@ -371,25 +374,29 @@ export default {
       let vm = this;
       return new Promise((resolve) => {
         axios
-          .get(`${Constant.BaseUrl}/${vm.entityUrl}/${replicateId}`)
+          .get(`${URL.BASE_URL}/${vm.entityUrl}/${replicateId}`)
           .then((res) => {
-            // let newEntity = res.data;
-            // newEntity["EmployeeCode"] = "";
             resolve(res.data);
           })
           .catch((error) => {
-            eventBus.$emit("showToastMessage", "GetInfoFailed", "ALERT", error);
+            eventBus.$emit(
+              "showToastMessage",
+              "GetInfoFailed",
+              "ALERT",
+              "",
+              error
+            );
           });
       });
     },
   },
   watch: {
     filterUpdate: function() {
-      this.loadTableData();
+      this.reloadTableData();
     },
   },
   mounted() {
-    this.loadTableData();
+    this.reloadTableData();
   },
 };
 </script>

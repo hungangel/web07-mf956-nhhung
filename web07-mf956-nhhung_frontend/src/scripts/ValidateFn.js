@@ -1,4 +1,4 @@
-import ResourceVI from "./ResourceVI";
+import ResourceVI from "./resource";
 
 class ValidateFn {
     /**
@@ -7,19 +7,15 @@ class ValidateFn {
      * @param {*} dataType kiểu dữ liệu cần validate
      * @returns 
      */
-    validateInputFormat(input, dataType) {
+    validateInputFormat(input, dataType, isRequired) {
         switch (dataType) {
             case 'PersonName':
-                return this.validName(input);
+                return this.validName(input, isRequired);
             case 'Email':
-                return this.validEmail(input);
-            case 'PhoneNumber':
-                return this.validPhoneNumber(input);
-            case 'IdentityNumber':
-                return this.validIdentity(input);
+                return this.validEmail(input, isRequired);
             default:
-                if (!input)
-                    return ResourceVI.ValidateMessage.NOT_NULL;
+                if (!input && isRequired == true)
+                    return ResourceVI.PopupMessage.NotNull;
                 return 'Correct';
         }
     }
@@ -29,11 +25,11 @@ class ValidateFn {
      * @returns Message Kết quả validate
      *  Nguyễn Hùng 18/07
      */
-    validName(myname) {
-        if (myname.length == 0) return ResourceVI.ValidateMessage.NOT_NULL;
+    validName(myname, isRequired) {
+        if (!myname && isRequired) return ResourceVI.PopupMessage.NotNull;
         for (var i = 0; i < myname.length; i++) {
             if (!isNaN(parseInt(myname[i], 10))) {
-                return ResourceVI.ValidateMessage.CONTAIN_ALPHABETS_ONLY;
+                return ResourceVI.PopupMessage.ContainAlphabetsOnly;
             }
         }
         return 'Correct';
@@ -44,30 +40,15 @@ class ValidateFn {
      * @returns Message Kết quả validate
      *  Nguyễn Hùng 18/07
      */
-    validEmail(myemail) {
-        if (myemail.length == 0) return ResourceVI.ValidateMessage.NOT_NULL;
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (re.test(String(myemail).toLowerCase()) == true) return 'Correct';
-        return ResourceVI.ValidateMessage.INVALID_FORMAT;
-    }
-
-    /**
-     * @param {} myid Xâu chứa CMTND/CCCD cần validate
-     * @returns Message Kết quả validate
-     *  Nguyễn Hùng 18/07
-     */
-    validIdentity(myid) {
-        if (!myid || myid.length == 0) return ResourceVI.ValidateMessage.NOT_NULL;
-        return 'Correct';
-    }
-
-    /**
-     * @param {} myphone Xâu chứa SDT cần validate
-     * @returns Message Kết quả validate
-     *  Nguyễn Hùng 18/07
-     */
-    validPhoneNumber(myphone) {
-        if (!myphone || myphone.length == 0) return ResourceVI.ValidateMessage.NOT_NULL;
+    validEmail(myemail, isRequired) {
+        if (!myemail && isRequired) return ResourceVI.PopupMessage.NotNull;
+        else if (myemail) {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (re.test(String(myemail).toLowerCase()) == true) return 'Correct';
+            return ResourceVI.PopupMessage.InvalidFormat;
+        } else {
+            return "Correct";
+        }
     }
 }
 export default new ValidateFn()

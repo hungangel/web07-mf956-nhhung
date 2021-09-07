@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import ResourceVI from "../../../scripts/ResourceVI";
+import ResourceVI from "../../../scripts/resource";
 export default {
   name: "OptionItem",
   props: {
     selectedEntityId: String,
-    optionEntity: String,
+    entityClass: String,
     mousePos: Number,
   },
   data() {
@@ -66,7 +66,7 @@ export default {
     },
   },
   mounted() {
-    this.options = ResourceVI.optionTexts[this.optionEntity];
+    this.options = ResourceVI.optionTexts[this.entityClass];
   },
   watch: {
     itemId: function() {},

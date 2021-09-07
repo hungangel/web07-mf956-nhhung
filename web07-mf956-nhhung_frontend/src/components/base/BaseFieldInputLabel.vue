@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import ValidateFn from "../../scripts/ValidateFn";
-import FormatFn from "../../scripts/FormatFunction";
+import ValidateFn from "../../scripts/validatefn";
+import FormatFn from "../../scripts/formatfunction";
 import Tooltip from "./BaseTooltip.vue";
 export default {
   name: "BaseInputLabel",
@@ -74,28 +74,20 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     validateInput() {
-      let vm = this;
-      //Những trường required cần validate
-      if (vm.isRequired) {
-        let validateMessage = ValidateFn.validateInputFormat(
-          vm.modelData,
-          vm.dataType
-        );
-        if (validateMessage != "Correct") {
-          vm.hasError = true;
-          vm.errorMessage = FormatFn.formatString(
-            validateMessage,
-            vm.labelText
-          );
-        } else {
-          vm.hasError = false;
-        }
-      } else {
-        vm.hasError = false;
+      let vm = this,
+      isRequired= vm.isRequired;
+
+      vm.hasError = false;
+      //Những trường nhập cần validate
+      let PopupMessage = ValidateFn.validateInputFormat( vm.modelData, vm.dataType, isRequired );
+
+      if (PopupMessage != "Correct") {
+        vm.hasError = true;
+        vm.errorMessage = FormatFn.formatString( PopupMessage, vm.labelText );
       }
       //Nếu có lỗi thì emit thông báo lỗi
       if (vm.hasError) return vm.errorMessage;
-      return "Correct";
+      else return "Correct";
     },
 
     /**

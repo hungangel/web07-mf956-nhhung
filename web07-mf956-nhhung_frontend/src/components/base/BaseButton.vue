@@ -4,7 +4,7 @@
     :class="subClass"
     @click="$emit('btnClick')"
     ref="myButton"
-    tabindex="0"
+    :tabindex="scopedTabIndex"
   >
     {{ buttonText }}
   </button>
@@ -16,6 +16,12 @@ export default {
     buttonText: String,
     subClass: String,
     reFocus: Boolean,
+    tabIndex: Number,
+  },
+  data() {
+    return {
+      scopedTabIndex: 0,
+    };
   },
   watch: {
     /**
@@ -25,6 +31,13 @@ export default {
     reFocus: function() {
       this.$refs.myButton.focus();
     },
+  },
+  mounted() {
+    if (!this.tabIndex) {
+      this.scopedTabIndex = 0;
+    } else {
+      this.scopedTabIndex = this.tabIndex;
+    }
   },
 };
 </script>

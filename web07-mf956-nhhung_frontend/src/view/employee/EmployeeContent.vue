@@ -6,7 +6,7 @@
 
         <div class="head-button-zone">
           <Button
-            subClass="add-entity fw-b"
+            subClass="fw-b"
             buttonText="Thêm mới nhân viên"
             @btnClick="showAddForm"
           />
@@ -21,7 +21,6 @@
             buttonText="Thao tác hàng loạt"
             @btnClick="requestDeleteMultiple"
           />
-          <!-- <ButtonIcon @btnClick="reloadTable" iconName="icon-24 i-refresh" /> -->
         </div>
         <div class="toolbar-right">
           <div class="filter">
@@ -29,8 +28,8 @@
               subClass="searchfield italic"
               iconName="i-search"
               placeHolder="Tìm theo Mã, Tên hoặc Số điện thoại"
-              v-model="searchboxFilter"
-              @input="onUpdatePagingInfo"
+              v-model="searchKey"
+              @input="onUpdateFilter"
             />
             <ButtonIcon @btnClick="reloadTable" iconName="icon-24 i-refresh" />
             <ButtonIcon @btnClick="exportFile" iconName="icon-24 i-excel" />
@@ -39,7 +38,7 @@
       </div>
       <Table
         ref="ctable"
-        :entity="entity"
+        :entityClass="'Employee'"
         entityUrl="Employees"
         :contentExpanded="contentExpanded"
         :warningResponse="warningResponse"
@@ -73,6 +72,7 @@
       :updateDropdown="updateDropdown"
       @callReloadTable="reloadTable"
       @hideAddForm="hideAddForm"
+      @changeFormMode="changeFormMode"
     />
   </div>
 </template>
@@ -86,9 +86,11 @@ import FieldInputIcon from "../../components/base/BaseFieldInputIcon.vue";
 import PageNavigation from "../../components/base/BasePageNavigation.vue";
 import Table from "../../components/base/BaseTable.vue";
 import AddEmployeeForm from "./AddEmployeeForm.vue";
-import FormatFn from "../../scripts/FormatFunction.js";
-import ResourceVI from "../../scripts/ResourceVI.js";
-import Constant from "../../api/config/APIConfig.js";
+import FormatFn from "../../scripts/formatfunction.js";
+import ResourceVI from "../../scripts/resource.js";
+import URL from "../../api/config/api_config.js";
+import DefautlConfig from "../../scripts/defautlconfig.js";
+import { HTTP_STATUS } from "../../scripts/enum/enumgeneral.js";
 export default {
   name: "EmployeePage",
   components: {
@@ -105,15 +107,18 @@ export default {
   },
   data() {
     return {
-      entity: "Employee",
+      entityClass: "Employee",
       entityUrl: "Employees",
+
       //filter props
-      searchboxFilter: "",
+      searchKey: "",
       updateTime: 0,
+
       //dropDown props:
       departments: [],
       positions: [],
       updateDropdown: true,
+
       //pageNavigation props
       pageNumber: 1,
       totalPage: 1,
@@ -121,8 +126,10 @@ export default {
       pageSize: 10,
       filters: {},
       filterUpdate: true,
+
       //table props
       thList: [],
+
       //form props
       isHidden: true,
       toggleForm: true,
@@ -143,7 +150,7 @@ export default {
   },
   methods: {
     reloadTable() {
-      this.$refs.ctable.loadTableData();
+      this.$refs.ctable.reloadTableData();
     },
     /**
      * Đổi giá trị biến để hiển thị form thông tin, thêm mới
@@ -163,7 +170,15 @@ export default {
     hideAddForm() {
       this.isHidden = true;
       this.formMode = -1;
-      this.$refs.ctable.loadTableData();
+      this.reloadTable();
+    },
+
+    /**
+     * Thay đổi chế độ của form chi tiết
+     * crby
+     */
+    changeFormMode(newMode) {
+      this.formMode = newMode;
     },
 
     /**
@@ -185,25 +200,25 @@ export default {
     optionOnClick(action, selectedEntity) {
       let vm = this;
       switch (action) {
-        case "ReqDelete":
+        case "RequestDelete":
           vm.requestDelete(selectedEntity);
           break;
-        case "ReqEdit":
+        case "RequestEdit":
           vm.formMode = 1;
           break;
-        case "ReqDuplicate":
+        case "RequestDuplicate":
           vm.formMode = 2;
           break;
       }
       if (this.formMode == 1 || this.formMode == 2) {
-        vm.selectedEntityID = selectedEntity[`${vm.entity}ID`];
+        vm.selectedEntityID = selectedEntity[`${vm.entityClass}ID`];
         vm.isHidden = false;
         vm.toggleForm = !vm.toggleForm;
       }
     },
 
     /**
- *Hiển thị thông báo hỏi xóa 1 bản ghi 
+ *Hiển thị thông báo hỏi xóa 1 bản ghi
  CreatedBy: NHHung(01/09)
  */
     requestDelete(selectedEntity) {
@@ -214,11 +229,10 @@ export default {
           messageType: "CONFIRM",
           textBody: FormatFn.formatString(
             ResourceVI.PopupMessage[action],
-            ResourceVI.EntityName[vm.entity],
-            selectedEntity[`${vm.entity}Code`]
+            selectedEntity[`${vm.entityClass}Code`]
           ),
         };
-      vm.selectedEntityID = selectedEntity[`${vm.entity}ID`];
+      vm.selectedEntityID = selectedEntity[`${vm.entityClass}ID`];
       eventBus.$emit("showPopupMessage", "FromContent", message, action);
     },
 
@@ -233,8 +247,7 @@ export default {
       message.messageType = "CONFIRM";
       message.textBody = FormatFn.formatString(
         ResourceVI.PopupMessage[action],
-        this.totalSelected,
-        ResourceVI.EntityName[this.entity]
+        this.totalSelected
       );
       eventBus.$emit("showPopupMessage", "FromContent", message, action);
     },
@@ -247,16 +260,27 @@ export default {
     },
 
     /**
-     * Nghe sự kiện bấm vào nút chuyển trang
+     * Sự kiện thay đổi dữ liệu lọc, cập nhật thông tin phân trang
+     * CreatedBy: NHHung(30/08)
+     */
+    onUpdateFilter() {
+      this.onUpdatePagingInfo(this.pageNumber, this.pageSize);
+    },
+
+    /**
+     * Sự kiện bấm vào nút chuyển trang, gọi hàm làm mới bảng
+     * CreatedBy: NHHung(30/08)
      **/
     onUpdatePagingInfo(pageNumber, pageSize) {
       this.pageNumber = pageNumber;
       this.pageSize = pageSize;
       this.filters = {
-        searchboxFilter: this.searchboxFilter,
+        searchKey: this.searchKey,
       };
       //Thay đổi trạng thái để kích hoạt sự kiện tải lại trang trong table
-      this.filterUpdate = !this.filterUpdate;
+      setTimeout(() => {
+        this.reloadTable();
+      }, 100);
     },
 
     /**
@@ -274,58 +298,57 @@ export default {
      * Thực hiện gọi API xuất bản dữ liệu
      * CreatedBy: NHHung(02/09)
      */
-    exportFile() {
-      let vm = this,
-        searchboxFilter = vm.filters.searchboxFilter;
-      //Các trường được xuất thông tin
-      let isAllPage = "true",
-        propNames = [
-          "EmployeeCode",
-          "FullName",
-          "GenderName",
-          "DateOfBirth",
-          "PositionName",
-          "DepartmentName",
-          "BankAccountNumber",
-          "BankName",
-        ];
+    async exportFile() {
+      try {
+        let response = await this.getExportFile();
+        if (response.status == HTTP_STATUS.Ok) {
+          //Nếu có dữ liệu trả về thì tạo element cho phép tải tệp
+          let url = window.URL.createObjectURL(new Blob([response.data])),
+            a = document.createElement("a"),
+            filename = DefautlConfig.ExportFileName;
 
-      let filterUrl =
-        `https://localhost:44346/api/v1/Employees/Export?` +
-        `pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}&isAllPage=${isAllPage}`;
-
-      if (searchboxFilter) {
-        filterUrl += `&searchKey=${searchboxFilter.trim()}`;
+          a.href = url;
+          a.setAttribute("download", filename);
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } else {
+          //Thông báo lỗi nếu không có dữ liệu
+          eventBus.$emit("showToastMessage", "NoContent");
+        }
+      } catch (error) {
+        eventBus.$emit(
+          "showToastMessage",
+          "ExportFileFailed",
+          "ALERT",
+          "ExportFileFailed",
+          error
+        );
       }
+    },
 
-      axios
-        .post(filterUrl, propNames, {
-          responseType: "blob",
-        })
-        .then((response) => {
-          if (response.status == 200) {
-            //Nếu có dữ liệu trả về thì tạo element cho phép tải tệp
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const a = document.createElement("a");
-            a.href = url;
-            const filename = `DSNV.xlsx`;
-            a.setAttribute("download", filename);
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          } else {
-            eventBus.$emit("showToastMessage", "NoContent");
-          }
-        })
-        .catch((error) => {
-          eventBus.$emit(
-            "showToastMessage",
-            "ExportFileFailed",
-            "ALERT",
-            "ExportFileFailed",
-            error
-          );
-        });
+    /**
+     * Gọi API lấy dữ liệu tệp xuất khẩu
+     * CreatedBy: NHHung(30/08)
+     */
+    async getExportFile() {
+      console.log(URL.BASE_URL);
+      let vm = this,
+        isAllPage = "true",
+        searchKey = vm.filters.searchKey,
+        //Các trường được xuất thông tin
+        propNames = DefautlConfig.ExportField,
+        filterUrl =
+          `${URL.BASE_URL}/${vm.entityUrl}/Export?` +
+          `pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}&isAllPage=${isAllPage}`;
+
+      if (searchKey) {
+        filterUrl += `&searchKey=${searchKey.trim()}`;
+      }
+      //Kiểu dữ liệu trả về là đối tượng nhị phân của tệp xuất khẩu
+      return axios.post(filterUrl, propNames, {
+        responseType: "blob",
+      });
     },
 
     /**
@@ -335,10 +358,10 @@ export default {
     async doDeleteEntity() {
       let vm = this;
       await axios
-        .delete(`${Constant.BaseUrl}/${vm.entityUrl}/${vm.selectedEntityID}`)
+        .delete(`${URL.BASE_URL}/${vm.entityUrl}/${vm.selectedEntityID}`)
         .then(() => {
           eventBus.$emit("showToastMessage", "DeleteComplete");
-          vm.$refs.ctable.loadTableData();
+          vm.reloadTable();
         })
         .catch((error) => {
           eventBus.$emit(
@@ -369,93 +392,16 @@ export default {
       }
     },
   },
+
   created() {
+    //Bắt sự kiện phản hồi từ popup message
     eventBus.$on("FromContentPopupResponse", (action, choice) => {
       this.processPopupResponse(action, choice);
     });
   },
   mounted() {
     //Mảng các cột của table hiển thị
-    this.thList = [
-      {
-        fieldName: "No",
-        dataType: "Checkbox",
-        fieldText: "",
-        thClass: "checkboxdiv",
-      },
-      {
-        fieldName: "EmployeeCode",
-        dataType: "Text",
-        fieldText: "MÃ NHÂN VIÊN",
-        thClass: "a-left minw-150",
-      },
-      {
-        fieldName: "FullName",
-        dataType: "Text",
-        fieldText: "TÊN NHÂN VIÊN",
-        thClass: "a-left minw-250",
-      },
-      {
-        fieldName: "GenderName",
-        dataType: "Text",
-        fieldText: "GIỚI TÍNH",
-        thClass: "a-left minw-100",
-      },
-      {
-        fieldName: "DateOfBirth",
-        dataType: "Date",
-        fieldText: "NGÀY SINH",
-        thClass: "a-center minw-150",
-      },
-      {
-        fieldName: "IdentityNumber",
-        dataType: "Text",
-        fieldText: "SỐ CMND",
-        thClass: "a-left minw-200",
-      },
-      {
-        fieldName: "PositionName",
-        dataType: "Text",
-        fieldText: "CHỨC DANH",
-        thClass: "a-left minw-250",
-      },
-      {
-        fieldName: "DepartmentName",
-        dataType: "Text",
-        fieldText: "TÊN ĐƠN VỊ",
-        thClass: "a-left minw-250",
-      },
-      {
-        fieldName: "BankAccountNumber",
-        dataType: "Text",
-        fieldText: "SỐ TÀI KHOẢN",
-        thClass: "a-left minw-150",
-      },
-      {
-        fieldName: "BankName",
-        dataType: "Text",
-        fieldText: "TÊN NGÂN HÀNG",
-        thClass: "a-left minw-250",
-      },
-      {
-        fieldName: "BankBranch",
-        dataType: "Text",
-        fieldText: "CHI NHÁNH TK NGÂN HÀNG",
-        thClass: "a-left minw-250",
-      },
-      {
-        fieldName: "MobilePhoneNumber",
-        dataType: "Text",
-        fieldText: "ĐT DI ĐỘNG",
-        thClass: "a-left minw-150",
-      },
-      {
-        fieldName: "LandlinePhoneNumber",
-        dataType: "Text",
-        fieldText: "ĐT CỐ ĐỊNH",
-        thClass: "a-left minw-150",
-      },
-    ];
+    this.thList = DefautlConfig.TableColumn;
   },
 };
 </script>

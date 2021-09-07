@@ -24,7 +24,7 @@
 
 <script>
 import "../../../css/layout/menu.css";
-import ResourceVI from '../../../scripts/ResourceVI';
+import ResourceVI from '../../../scripts/resource';
 import MenuItem from "./MenuItem.vue";
 export default {
   name: "TheMenu",

@@ -65,7 +65,7 @@
 <script>
 import Button from "./BaseButton.vue";
 import ComboBox from "./BaseComboBox.vue";
-import ResourceVI from "../../scripts/ResourceVI.js";
+import ResourceVI from "../../scripts/resource.js";
 import { eventBus } from "../../main.js";
 export default {
   name: "PageNavigation",

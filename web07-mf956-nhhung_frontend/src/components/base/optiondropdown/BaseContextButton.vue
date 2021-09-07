@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import ResourceVI from "../../../scripts/ResourceVI";
+import ResourceVI from "../../../scripts/resource";
 export default {
   name: "OptionDropdown",
   props: {
     optionItemValue: String,
-    optionItemName: String,
+    entityClass: String,
   },
   data() {
     return {
@@ -50,14 +50,14 @@ export default {
      *  CreatedBy: NHHung(29/08)
      */
     optionOnClick() {
-      let action = ResourceVI.optionTexts[this.optionItemName][0].optionAction;
+      let action = ResourceVI.optionTexts[this.entityClass][0].optionAction;
       this.$emit("optionOnClick", action, this.optionItemValue);
     },
   },
   mounted() {
-    this.options = ResourceVI.optionTexts[this.optionItemName];
+    this.options = ResourceVI.optionTexts[this.entityClass];
     this.defaultOptionText =
-      ResourceVI.optionTexts[this.optionItemName][0].optionText;
+      ResourceVI.optionTexts[this.entityClass][0].optionText;
   },
 };
 </script>

@@ -22,7 +22,7 @@
             v-if="showBtnArr[0]"
             class="secondary fw-600"
             :buttonText="btnCancelText"
-            @btnClick="messageBtnOnClick('CANCEL')"
+            @btnClick="messageBtnOnClick('Cancel')"
           />
         </div>
         <div class="mess-footer-right flex">
@@ -34,7 +34,9 @@
             @btnClick="messageBtnOnClick('DECLINE')"
           />
           <Button
+            ref="btnConfirm"
             class="primary fw-600"
+            :reFocus="reFocus"
             :buttonText="btnConfirmText"
             @btnClick="messageBtnOnClick('CONFIRM')"
           />
@@ -44,9 +46,10 @@
   </div>
 </template>
 <script>
-import ResourceVI from "../../scripts/ResourceVI.js";
+import ResourceVI from "../../scripts/resource.js";
 import { eventBus } from "../../main.js";
 import Button from "./BaseButton.vue";
+// import MESSAGE_MODE from '../../scripts/enum/enumgeneral'
 export default {
   name: "PopupMessage",
   components: {
@@ -57,13 +60,14 @@ export default {
       isHiddenWarning: true,
       action: "",
       messageType: "",
-      btnnDeclineText: ResourceVI.ButtonText.NO,
-      btnConfirmText: ResourceVI.ButtonText.YES,
-      btnCancelText: ResourceVI.ButtonText.CANCEL,
+      btnnDeclineText: ResourceVI.ButtonText.No,
+      btnConfirmText: ResourceVI.ButtonText.Yes,
+      btnCancelText: ResourceVI.ButtonText.Cancel,
       showBtnArr: [true, false],
       source: "",
       icon: "i-blue-question",
       message: {},
+      reFocus: true,
     };
   },
   methods: {
@@ -91,31 +95,32 @@ export default {
       switch (vm.messageType) {
         case "FULL":
           vm.showBtnArr = [true, true];
-          vm.btnnDeclineText = ResourceVI.ButtonText.NO;
-          vm.btnConfirmText = ResourceVI.ButtonText.YES;
-          vm.btnCancelText = ResourceVI.ButtonText.CANCEL;
+          vm.btnnDeclineText = ResourceVI.ButtonText.No;
+          vm.btnConfirmText = ResourceVI.ButtonText.Yes;
+          vm.btnCancelText = ResourceVI.ButtonText.Cancel;
           vm.icon = "i-blue-question";
           break;
         case "CONFIRM":
           vm.showBtnArr = [true, false];
-          vm.btnConfirmText = ResourceVI.ButtonText.YES;
-          vm.btnCancelText = ResourceVI.ButtonText.NO;
+          vm.btnConfirmText = ResourceVI.ButtonText.Yes;
+          vm.btnCancelText = ResourceVI.ButtonText.No;
           vm.icon = "i-warning";
           break;
         case "NOTIFY":
           vm.showBtnArr = [false, false];
-          vm.btnConfirmText = ResourceVI.ButtonText.WARNING;
+          vm.btnConfirmText = ResourceVI.ButtonText.Accept;
           vm.icon = "i-warning";
           break;
         case "ALERT":
           vm.showBtnArr = [false, false];
-          vm.btnConfirmText = ResourceVI.ButtonText.CLOSE;
+          vm.btnConfirmText = ResourceVI.ButtonText.Close;
           vm.icon = "i-error";
           break;
       }
-      this.message = message;
-      this.action = action;
-      this.isHiddenWarning = false;
+      vm.message = message;
+      vm.action = action;
+      vm.isHiddenWarning = false;
+      vm.reFocus = !vm.reFocus;
     },
   },
   created() {

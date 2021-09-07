@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import ResourceVI from "../../scripts/ResourceVI";
+import ResourceVI from "../../scripts/resource";
 import { eventBus } from "../../main";
 export default {
   name: "ToastMessage",
@@ -41,14 +41,14 @@ export default {
     showToastMessage(actionResult, toastType) {
       let vm = this;
       this.isShow = true;
-      this.toastMessage = ResourceVI.UserMsg[actionResult];
+      this.toastMessage = ResourceVI.PopupMessage[actionResult];
 
       switch (toastType) {
         case "ALERT":
           vm.toastIcon = "i-error";
           vm.toastIconClose = "icon-red-cross";
           break;
-        case "WARNING":
+        case "Accept":
           vm.toastIcon = "i-warning";
           vm.toastIconClose = "icon-orange-cross";
           break;
@@ -68,8 +68,11 @@ export default {
   },
   created() {
     //Sự kiện từ các components gọi hiển thị toast message
-    eventBus.$on("showToastMessage", (actionResult, toastType, source) => {
+    eventBus.$on("showToastMessage", (actionResult, toastType, source, error) => {
       this.showToastMessage(actionResult, toastType, source);
+      if(error){
+        console.log(error)
+      }
     });
   },
 };

@@ -74,12 +74,12 @@
 <script>
 import axios from "axios";
 import { mixin as clickaway } from "vue-clickaway";
-import Constant from "../../api/config/APIConfig";
-import FormatFn from "../../scripts/FormatFunction";
+import URL from "../../api/config/api_config";
+import FormatFn from "../../scripts/formatfunction";
 import Tooltip from "./BaseTooltip.vue";
-import ResourceVI from "../../scripts/ResourceVI";
+import ResourceVI from "../../scripts/resource";
 import { eventBus } from "../../main";
-import EntityModel from "../../scripts/model/EntityModel";
+import EntityModel from "../../scripts/model/entitymodel";
 export default {
   mixins: [clickaway],
   name: "BaseCombobox",
@@ -236,7 +236,7 @@ export default {
         vm.inputValue = vm.defaultName;
         vm.hasError = true;
         vm.errorMessage = FormatFn.formatString(
-          ResourceVI.ValidateMessage.NOT_NULL,
+          ResourceVI.PopupMessage.NotNull,
           vm.labelText
         );
         vm.$emit("input", null);
@@ -255,7 +255,7 @@ export default {
         else vm.hasError = false;
       }
       vm.errorMessage = FormatFn.formatString(
-        ResourceVI.ValidateMessage.NOT_NULL,
+        ResourceVI.PopupMessage.NotNull,
         vm.labelText
       );
       if (vm.hasError) return vm.errorMessage;
@@ -264,6 +264,7 @@ export default {
     resetFieldInput() {
       this.currentId = "";
       this.inputValue = "";
+      this.hasError= false;
     },
 
     /**
@@ -273,12 +274,12 @@ export default {
      */
     keydownOnItem(event) {
       let vm = this,
-        preventKeys = "ArrowUp ArrowDown Enter",
-        tmpVal = event.target.value;
+        preventKeys = "ArrowUp ArrowDown Enter";
+        // tmpVal = event.target.value;
       if (preventKeys.search(event.code) >= 0) {
         event.preventDefault();
       }
-      vm.inputValue = tmpVal;
+      // vm.inputValue = tmpVal;
 
       switch (event.key) {
         //Trường hợp bấm lên xuống chọn item
@@ -324,7 +325,7 @@ export default {
       if (vm.entityUrl) {
         (async () => {
           await axios
-            .get(`${Constant.BaseUrl}/${vm.entityUrl}`)
+            .get(`${URL.BASE_URL}/${vm.entityUrl}`)
             .then((response) => {
               vm.items = response.data;
             })

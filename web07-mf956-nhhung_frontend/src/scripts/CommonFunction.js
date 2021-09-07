@@ -1,5 +1,5 @@
-import ResourceVI from "./ResourceVI";
-import EnumGeneral from "./enum/EnumGeneral";
+import ResourceVI from "./resource";
+import * as EnumGeneral from "./enum/enumgeneral";
 class CommonFn {
     getEnumText(enumClass, enumValue) {
 

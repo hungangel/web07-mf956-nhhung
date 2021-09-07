@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'd-none': isHidden }">
-    <div class="modal-background"></div>
-    <div class="modal-zone" entityId="manv">
+    <div class="modal-background" @keydown="handleKeydown"></div>
+    <div class="modal-zone" entityId="manv" @keydown="handleKeydown">
       <div class="modal">
         <div class="md-header">
           <div class="flex">
@@ -176,8 +176,10 @@
               <div class="md-content-col">
                 <div class="md-input-row  w-50p">
                   <FieldInputLabel
+                    ref="validateFieldEmail"
                     labelText="Email"
                     :maxLength="100"
+                    dataType="Email"
                     v-model="employee.Email"
                     :originValue="employee.Email"
                     :validate="triggerValidate"
@@ -223,18 +225,19 @@
             <Button
               subClass="secondary fw-700 cancel"
               buttonText="Hủy"
+              :tabIndex="1"
               @btnClick="btnCloseOnClick"
             />
             <div class="flex">
               <Button
                 subClass="secondary fw-700"
                 buttonText="Cất"
-                @btnClick="btnSaveOnClick('SaveThenClose')"
+                @btnClick="btnSaveOnClick('SaveAndClose')"
               />
               <Button
                 subClass="primary fw-700 ml-10  btn-save "
                 buttonText="Cất và Thêm"
-                @btnClick="btnSaveOnClick('SaveThenAdd')"
+                @btnClick="btnSaveOnClick('SaveAndAdd')"
               />
             </div>
           </div>
@@ -248,16 +251,18 @@
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import axios from "axios";
-import FormatFn from "../../scripts/FormatFunction.js";
+import FormatFn from "../../scripts/formatfunction";
 import Checkbox from "../../components/base/BaseCheckbox.vue";
 import RadioButton from "../../components/base/BaseRadioButton.vue";
 import FieldInputLabel from "../../components/base/BaseFieldInputLabel.vue";
 import ComboBox from "../../components/base/BaseComboBox.vue";
 import Button from "../../components/base/BaseButton.vue";
 import { eventBus } from "../../main.js";
-import ResourceVI from "../../scripts/ResourceVI.js";
-import Constant from "../../api/config/APIConfig.js";
-import LocalConfig from "../../scripts/LocalConfig.js";
+import ResourceVI from "../../scripts/resource.js";
+import URL from "../../api/config/api_config.js";
+import DefautlConfig from "../../scripts/defautlconfig";
+import { FORM_MODE, HTTP_STATUS } from "../../scripts/enum/enumgeneral";
+
 export default {
   mixins: [FormatFn],
   name: "EmployeeForm",
@@ -273,13 +278,14 @@ export default {
     return {
       originEntity: {},
       employee: {},
-      defaultDateFormat: LocalConfig.DateFormat,
+      defaultDateFormat: DefautlConfig.DateFormat,
       isShowed: true,
       updateCombobox: true,
       triggerValidate: true,
       firstErrorField: null,
       entity: "Employee",
       firstErrorMessage: "",
+      keyCombination: "",
     };
   },
   props: {
@@ -295,57 +301,89 @@ export default {
     //#region Sự kiện trên các nút / components
 
     /**
-     * Thực thi cho sự kiện do nút save emit .
+     * Xử lí sự kiện keydown trên modal
+     * crby
+     */
+    handleKeydown() {
+      // let vm = this,
+      //   keyName = event.key,
+      //   isCorrectCombine = false;
+      // console.log(keyName);
+      // if (keyName == "Control" || keyName == "Control") {
+      //   vm.keyCombination += keyName;
+      //   isCorrectCombine = false;
+      // }
+      // if (
+      //   vm.keyCombination == "Control" &&
+      //   (keyName == "s" || keyName == "S")
+      // ) {
+      //   event.preventDefault();
+      //   isCorrectCombine = true;
+      //   console.log("save");
+      // }
+      // if (
+      //   vm.keyCombination == "ControlShift" &&
+      //   (keyName == "s" || keyName == "S")
+      // ) {
+      //   event.preventDefault();
+      //   isCorrectCombine = true;
+      //   console.log("savee addd");
+      // }
+      // if (!isCorrectCombine) {
+      //   vm.keyCombination = "";
+      //   console.log("reset combine");
+      // }
+    },
+
+    /**
+     * Thực thi cho sự kiện do nút save emit, mặc định thêm và đóng .
      * Kiểm tra trạng thái form thêm mới (0) hay cập nhật (1)
      * Thực hiện validate và hiện popup confirm / thông báo lỗi
      *  CreatedBy: NHHung(29/08)
      */
     async btnSaveOnClick(formAction) {
-      let vm = this,
-        errorField = vm.validateFormData();
-      //Nếu form đang ở chế độ sửa thông tin
-      if (vm.formMode == 1) {
-        formAction = formAction.replace("Save", "Update");
-      }
+      try {
+        let vm = this,
+          errorField = vm.validateFormData();
+        //Nếu form đang ở chế độ sửa thông tin
+        if (vm.formMode == FORM_MODE.Update)
+          formAction = formAction.replace("Save", "Update");
 
-      if (!errorField) {
-        let isValid = false;
-        //Kiểm tra mã trùng
-        isValid = await vm.checkExistingCode(vm.employee.EmployeeCode);
+        if (!errorField) {
+          let isNewCode = false;
 
-        if (isValid) {
-          //Nếu không có lỗi xảy ra, hiện popup xác nhận lưu
-          let popupMessage = {
-            messageType: "CONFIRM",
-            textBody: FormatFn.formatString(
-              ResourceVI.PopupMessage[formAction],
-              vm.employee.FullName
-            ),
-          };
-          vm.showPopupMessage(popupMessage, formAction);
-        } else {
-          //Nếu mã bị trùng
-          let popupMessage = {
-            messageType: "ALERT",
-            textBody: FormatFn.formatString(
-              ResourceVI.ValidateMessage.DUPLICATED,
-              ResourceVI.EntityName[vm.entity],
+          //Kiểm tra mã trùng
+          isNewCode = await vm.checkExistingCode(vm.employee.EmployeeCode);
+          if (isNewCode) {
+            //Nếu không có lỗi xảy ra, hiện popup xác nhận lưu
+            vm.createPopupMessage("CONFIRM", formAction, vm.employee.FullName);
+          } else {
+            //Nếu mã bị trùng
+            vm.createPopupMessage(
+              "ALERT",
+              "Duplicated",
               vm.employee.EmployeeCode
-            ),
-          };
-
-          //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
-          vm.firstErrorField = "validateFieldCode";
-          vm.showPopupMessage(popupMessage, formAction);
+            );
+            //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
+            vm.firstErrorField = "validateFieldCode";
+          }
+        } else {
+          // Nếu kết quả validate không hợp lệ
+          let action = "ValidateOnSave",
+            message = {
+              messageType: "ALERT",
+              textBody: vm.firstErrorMessage,
+            };
+          eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
         }
-      } else {
-        //Nếu kết quả validate không hợp lệ
-        let action = "ValidateOnSave",
-          message = {
-            messageType: "ALERT",
-            textBody: vm.firstErrorMessage,
-          };
-        eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
+      } catch (error) {
+        eventBus.$emit(
+          "showToastMessage",
+          "CommonError",
+          "ALERT",
+          "CheckExistingCode",
+          error
+        );
       }
     },
 
@@ -355,18 +393,60 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     btnCloseOnClick() {
-      let isModifiedForm = this.checkModifiedEntity(),
-        formAction = "SaveThenClose";
+      //Kiểm tra trạng thái thay đổi của form
+      let isModifiedForm = this.checkModifiedEntity();
 
       if (isModifiedForm) {
-        let popupMessage = {
-          messageType: "FULL",
-          textBody: ResourceVI.PopupMessage["CloseModifedForm"],
-        };
-        this.showPopupMessage(popupMessage, formAction);
+        this.createPopupMessage("FULL", "CloseModifiedForm");
       } else {
         this.resetEntityData();
         this.$emit("hideAddForm");
+      }
+    },
+
+    /**
+     * Xử lí sau khi xác nhận lưu dữ liệu khi đóng form
+     * crby
+     */
+    async confirmSaveOnClose() {
+      try {
+        let vm = this;
+
+        //Validate các trường đã nhập
+        let errorField = vm.validateFormData();
+        if (!errorField) {
+          let isNewCode = false;
+
+          //Kiểm tra mã trùng
+          isNewCode = await vm.checkExistingCode(vm.employee.EmployeeCode);
+          if (!isNewCode) {
+            //Nếu mã bị trùng
+            vm.createPopupMessage(
+              "ALERT",
+              "Duplicated",
+              vm.employee.EmployeeCode
+            );
+            //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
+            vm.firstErrorField = "validateFieldCode";
+          }
+        } else {
+          console.log("validate failed ok");
+          // Nếu kết quả validate không hợp lệ
+          vm.createPopupMessage(
+            "ALERT",
+            "ValidateOnSave",
+            vm.firstErrorMessage,
+            true
+          );
+        }
+      } catch (error) {
+        eventBus.$emit(
+          "showToastMessage",
+          "CommonError",
+          "ALERT",
+          "CheckExistingCode",
+          error
+        );
       }
     },
 
@@ -379,6 +459,13 @@ export default {
     checkModifiedEntity() {
       let vm = this;
       for (let key in vm.employee) {
+        //Nếu dữ liệu so sánh và dữ liệu hiện tại là trống / null thì bỏ qua
+        if (
+          (vm.employee[key] == null || vm.employee[key] == "") &&
+          (vm.originEntity[key] == null || vm.originEntity[key] == "")
+        ) {
+          continue;
+        }
         if (vm.employee[key] != vm.originEntity[key]) return true;
       }
       return false;
@@ -390,6 +477,7 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     validateFormData() {
+      console.log("validateing");
       let vm = this,
         errorField = null;
 
@@ -411,7 +499,7 @@ export default {
      * CreatedBy: NHHung(01/09)
      */
     focusOnFirstErrorField() {
-      this.$refs[this.firstErrorField].doFocus(true);
+      if (this.firstErrorField) this.$refs[this.firstErrorField].doFocus(true);
     },
 
     /**
@@ -420,7 +508,13 @@ export default {
      */
     processAddFormResponse(action, choice) {
       let vm = this;
+
       if (choice == "CONFIRM") {
+        if (action == "CloseModifiedForm") {
+          action =
+            vm.formMode == FORM_MODE.Update ? "UpdateAndClose" : "SaveAndClose";
+          vm.confirmSaveOnClose();
+        }
         switch (action) {
           //Trường hợp confirm khi thông báo lỗi, focus ô bị lỗi
           case "ValidateOnSave":
@@ -430,12 +524,16 @@ export default {
             //Mặc địnhh kiểm tra hành động có phải là lưu hay update, gọi hàm tương ứng
             //Thực hiện khi không có lỗi
             if (
-              (action.includes("SaveThen") || action.includes("UpdateThen")) &&
+              action &&
+              (action.includes("Save") || action.includes("Update")) &&
               vm.firstErrorField == null
             ) {
-              if (vm.formMode == 0 || vm.formMode == 2) {
+              if (
+                vm.formMode == FORM_MODE.Add ||
+                vm.formMode == FORM_MODE.Duplicate
+              ) {
                 vm.doSaveEntity(action);
-              } else if (vm.formMode == 1) {
+              } else if (vm.formMode == FORM_MODE.Update) {
                 vm.doUpdateEntity(action);
               }
             }
@@ -460,7 +558,7 @@ export default {
       let vm = this,
         isValid = true;
       await axios
-        .post(`${Constant.BaseUrl}/${vm.entityUrl}/`, vm.employee)
+        .post(`${URL.BASE_URL}/${vm.entityUrl}/`, vm.employee)
         .then((response) => {
           vm.processSaveResponse("AddSuccess", isValid, response);
           vm.processAfterSave(formAction);
@@ -480,10 +578,7 @@ export default {
       let vm = this,
         isValid = true;
       await axios
-        .put(
-          `${Constant.BaseUrl}/${vm.entityUrl}/${vm.employeeID}`,
-          vm.employee
-        )
+        .put(`${URL.BASE_URL}/${vm.entityUrl}/${vm.employeeID}`, vm.employee)
         .then((response) => {
           vm.processSaveResponse("UpdateSuccess", isValid, response);
           vm.processAfterSave(formAction);
@@ -504,11 +599,14 @@ export default {
       return new Promise((resolve) => {
         axios
           .get(
-            `${Constant.BaseUrl}/${vm.entityUrl}/CheckExist?entityCode=${entityCode}`
+            `${URL.BASE_URL}/${vm.entityUrl}/CheckExist?entityCode=${entityCode}`
           )
           .then((response) => {
-            if (response.status == 200) {
-              if (vm.formMode == 0 || vm.formMode == 2) {
+            if (response.status == HTTP_STATUS.Ok) {
+              if (
+                vm.formMode == FORM_MODE.Add ||
+                vm.formMode == FORM_MODE.Duplicate
+              ) {
                 resolve(false);
               } else {
                 let isExsisted = true,
@@ -542,26 +640,42 @@ export default {
      * Trả về mã lấy được
      * CreatedBy: NHHung(31/08)
      */
-    getNewEntityCode() {
+    async getNewEntityCode() {
       let vm = this;
-      return new Promise((resolve) => {
-        axios
-          .get(`${Constant.BaseUrl}/${vm.entityUrl}/NewCode`)
-          .then((response) => {
-            // vm.$set(vm.employee, `${vm.entity}Code`, response.data);
-            // vm.assignOriginEntity();
-            resolve(response.data);
-          })
-          .catch((error) => {
-            eventBus.$emit(
-              "showToastMessage",
-              "GetNewCodeFailed",
-              "ALERT",
-              "GetNewCode",
-              error
-            );
-          });
-      });
+      try {
+        let response = await axios.get(
+          `${URL.BASE_URL}/${vm.entityUrl}/NewCode`
+        );
+        return response.data;
+      } catch (error) {
+        eventBus.$emit(
+          "showToastMessage",
+          "GetInfoFailed",
+          "ALERT",
+          "GetInfo",
+          error
+        );
+
+        return {};
+      }
+
+      // let vm = this;
+      // return new Promise((resolve) => {
+      //   axios
+      //     .get(`${URL.BASE_URL}/${vm.entityUrl}/NewCode`)
+      //     .then((response) => {
+      //       resolve(response.data);
+      //     })
+      //     .catch((error) => {
+      //       eventBus.$emit(
+      //         "showToastMessage",
+      //         "GetNewCodeFailed",
+      //         "ALERT",
+      //         "GetNewCode",
+      //         error
+      //       );
+      //     });
+      // });
     },
 
     /**
@@ -569,27 +683,41 @@ export default {
      * trả về thông tin đối tượn
      * CreatedBy: NHHung(01/09)
      */
-    getEntityInfo() {
+    async getEntityInfo() {
       let vm = this;
-      return new Promise((resolve) => {
-        axios
-          .get(`${Constant.BaseUrl}/${vm.entityUrl}/${vm.employeeID}`)
-          .then((response) => {
-            let foundEntity = response.data;
-            // vm.employee = FormatFn.formatEntityData(foundEntity);
-            // vm.assignOriginEntity();
-            resolve(foundEntity);
-          })
-          .catch((error) => {
-            eventBus.$emit(
-              "showToastMessage",
-              "GetInfoFailed",
-              "ALERT",
-              "GetInfo",
-              error
-            );
-          });
-      });
+      try {
+        let response = await axios.get(
+          `${URL.BASE_URL}/${vm.entityUrl}/${vm.employeeID}`
+        );
+        return response.data;
+      } catch (error) {
+        eventBus.$emit(
+          "showToastMessage",
+          "GetInfoFailed",
+          "ALERT",
+          "GetInfo",
+          error
+        );
+
+        return {};
+      }
+      // return new Promise((resolve) => {
+      //   axios
+      //     .get(`${URL.BASE_URL}/${vm.entityUrl}/${vm.employeeID}`)
+      //     .then((response) => {
+      //       let foundEntity = response.data;
+      //       resolve(foundEntity);
+      //     })
+      //     .catch((error) => {
+      //       eventBus.$emit(
+      //         "showToastMessage",
+      //         "GetInfoFailed",
+      //         "ALERT",
+      //         "GetInfo",
+      //         error
+      //       );
+      //     });
+      // });
     },
 
     /**
@@ -626,6 +754,7 @@ export default {
     processAfterSave(formAction) {
       let vm = this;
       vm.resetEntityData();
+      this.$emit("changeFormMode", FORM_MODE.Add);
       if (formAction.includes("Close")) {
         vm.$emit("hideAddForm");
         vm.$emit("callReloadTable");
@@ -654,9 +783,35 @@ export default {
         responseData = {};
       if (isValid) {
         eventBus.$emit("showToastMessage", actionResult, "NOTIFY");
-      } else {
+      } else if (response && (response.data || response.response.data)) {
         responseData = response.response.data;
         vm.createMessageFromResponse(actionResult, isValid, responseData);
+      }
+    },
+
+    /**
+     * Tạo Message popup và hiển thị
+     * CreatedBy: NHHung(05/09/2021)
+     */
+    createPopupMessage(messageType, action, params, isCustomMessage) {
+      if (!isCustomMessage) {
+        let textBody = FormatFn.formatString(
+            ResourceVI.PopupMessage[action],
+            params
+          ),
+          message = {
+            messageType,
+            textBody,
+          };
+        eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
+      } else {
+        let message = {
+          messageType,
+          textBody: params,
+        };
+        setTimeout(() => {
+          eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
+        }, 200);
       }
     },
 
@@ -677,20 +832,20 @@ export default {
         messageType = "NOTIFY";
         textBody = responseData.userMsg
           ? responseData.userMsg
-          : ResourceVI.UserMsg[actionResult];
+          : ResourceVI.PopupMessage[actionResult];
       } else {
         if (responseData) {
           messageType = "ALERT";
           textBody = responseData.userMsg
             ? responseData.userMsg
-            : ResourceVI.UserMsg[actionResult];
+            : ResourceVI.PopupMessage[actionResult];
         } else {
-          textBody = ResourceVI.UserMsg[actionResult];
+          textBody = ResourceVI.PopupMessage[actionResult];
         }
       }
-
-      let popupMessage = { messageType, textBody };
-      this.showPopupMessage(popupMessage);
+      this.createPopupMessage(messageType, textBody, "", true);
+      // let popupMessage = { messageType, textBody };
+      // this.showPopupMessage(popupMessage);
     },
     //#endregion
 
@@ -701,6 +856,7 @@ export default {
      */
     preLoadFormData() {
       let vm = this;
+
       (async () => {
         //Autofocus vào ô có ref= "autofocus"
         vm.isShowed = !vm.isShowed;
@@ -708,9 +864,10 @@ export default {
         let entityInfo = {},
           newEntity = {},
           newEntityCode = "";
-        //Mode= 0: THêm mới, 1:Sửa thông tin, 2:Nhân bản
+
+        //Tải dữ liệu phụ thuộc formmode
         switch (vm.formMode) {
-          case 0:
+          case FORM_MODE.Add:
             //Lấy mã mới cho form
             newEntityCode = await vm.getNewEntityCode();
             newEntity[`${vm.entity}Code`] = newEntityCode;
@@ -718,13 +875,14 @@ export default {
             vm.assignOriginEntity();
             break;
 
-          case 1:
+          case FORM_MODE.Update:
             //Lấy thông tin đối tượng lên trên form
             vm.employee = await vm.getEntityInfo();
             vm.employee = FormatFn.formatEntityData(vm.employee, vm.entity);
             vm.assignOriginEntity();
             break;
-          case 2:
+
+          case FORM_MODE.Duplicate:
             //Lấy mã mới và thông tin của đối tượng lên form
             newEntityCode = await vm.getNewEntityCode();
             entityInfo = await vm.getEntityInfo();
