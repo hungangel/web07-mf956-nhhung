@@ -73,8 +73,8 @@ export default {
   methods: {
     messageBtnOnClick(choice) {
       switch (this.messageType) {
-        case "NOTIFY":
-          break;
+        // case "NOTIFY":
+        //   break;
         default:
           eventBus.$emit(`${this.source}PopupResponse`, this.action, choice);
           break;

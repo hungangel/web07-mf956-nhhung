@@ -1,5 +1,9 @@
 <template>
-  <div class="combobox-zone" :class="[subClass, hasError ? 'error ' : '']">
+  <div
+    class="combobox-zone"
+    :class="[subClass, hasError ? 'error ' : '']"
+    v-on-clickaway="cbxOnClickAway"
+  >
     <Tooltip :errorMessage="errorMessage" />
     <label
       >{{ labelText }}
@@ -121,8 +125,7 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     cbxOnClickAway() {
-      console.log("clickaway");
-      // this.closed = true;
+      this.closed = true;
     },
 
     /**
@@ -172,15 +175,17 @@ export default {
     clickItem(itemIndex) {
       let vm = this,
         item = vm.items[itemIndex];
-
+      vm.currentId = item[vm.itemId];
+      vm.inputValue = item[vm.itemName];
+      
       let digitValue = Number(vm.currentId);
+      console.log(digitValue);
       if (!isNaN(digitValue)) {
         vm.$emit("input", digitValue);
       } else {
         vm.$emit("input", item[vm.itemId]);
       }
-      vm.currentId = item[vm.itemId];
-      vm.inputValue = item[vm.itemName];
+
       setTimeout(() => {
         vm.closed = true;
       }, 250);
@@ -231,12 +236,19 @@ export default {
 
       if (!hasMatchItem) {
         vm.currentId = vm.defaultId;
-        vm.inputValue = vm.defaultName;
+        // vm.inputValue = vm.defaultName;
         vm.hasError = true;
-        vm.errorMessage = FormatFn.formatString(
-          ResourceVI.PopupMessage.NotNull,
-          vm.labelText
-        );
+        if (vm.inputValue) {
+          vm.errorMessage = FormatFn.formatString(
+            ResourceVI.PopupMessage.NotMatch,
+            vm.labelText
+          );
+        } else {
+          vm.errorMessage = FormatFn.formatString(
+            ResourceVI.PopupMessage.NotNull,
+            vm.labelText
+          );
+        }
         vm.$emit("input", null);
       }
     },

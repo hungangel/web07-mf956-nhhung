@@ -92,11 +92,11 @@ export default {
       numberOfShowButton: 5,
       pageIndexBtns: [],
       pageSizeOptions: [
-        { pageSizeValue: 10, pageSizeText: "10 " + ResourceVI.pageSizeText },
-        { pageSizeValue: 20, pageSizeText: "20 " + ResourceVI.pageSizeText },
-        { pageSizeValue: 30, pageSizeText: "30 " + ResourceVI.pageSizeText },
-        { pageSizeValue: 50, pageSizeText: "50 " + ResourceVI.pageSizeText },
-        { pageSizeValue: 100, pageSizeText: "100 " + ResourceVI.pageSizeText },
+        { pageSizeValue: 10, pageSizeText: "10 " + ResourceVI.PageSizeText },
+        { pageSizeValue: 20, pageSizeText: "20 " + ResourceVI.PageSizeText },
+        { pageSizeValue: 30, pageSizeText: "30 " + ResourceVI.PageSizeText },
+        { pageSizeValue: 50, pageSizeText: "50 " + ResourceVI.PageSizeText },
+        { pageSizeValue: 100, pageSizeText: "100 " + ResourceVI.PageSizeText },
       ],
     };
   },
@@ -135,6 +135,7 @@ export default {
      */
     updatePageSize(newPageSize) {
       let vm = this;
+      console.log(newPageSize)
       vm.adjustCenterButtonNumber();
       vm.$emit("onUpdatePagingInfo", vm.currentPageNumber, newPageSize);
     },
@@ -200,9 +201,11 @@ export default {
       eventBus.$emit("hideLoadingScreen", "updateTotalRecord");
     },
     totalPage: function() {
+      this.currentPageNumber = 1;
       this.adjustCenterButtonNumber();
     },
     currentPageSize: function(newPageSize) {
+      this.currentPageNumber = 1;
       this.adjustCenterButtonNumber();
       this.updatePageSize(newPageSize);
     },

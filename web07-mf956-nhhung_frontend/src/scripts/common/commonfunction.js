@@ -1,6 +1,12 @@
 import ResourceVI from "../resource";
 import * as EnumGeneral from "../enum/enumgeneral";
 class CommonFn {
+    /**
+     * Lấy key của enum theo giá trị
+     * @param {Tên enum} enumClass 
+     * @param {Giá trị của enum} enumValue 
+     * @returns 
+     */
     getEnumText(enumClass, enumValue) {
 
         let enumResource = ResourceVI[enumClass]
@@ -13,7 +19,11 @@ class CommonFn {
         }
     }
 
-
+    /**
+     * Kiểm tra 1 xâu cs phải xâu ngày tháng không
+     * @param {xâu cần kiểm tra} dateStr 
+     * @returns 
+     */
     isaDate(dateStr) {
         dateStr = dateStr + "";
         let dateArr = dateStr.split("T");
@@ -25,6 +35,16 @@ class CommonFn {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Lấy key của 1 đối tượng theo giá trị truyền vào
+     * @param {Đối tượng chứa dữ liệu} object 
+     * @param {giá trị của trường đó} value 
+     * @returns 
+     */
+    getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
     }
 }
 

@@ -269,7 +269,12 @@ import { eventBus } from "../../main.js";
 import ResourceVI from "../../scripts/resource.js";
 import URL from "../../api/config/api_config.js";
 import DefaultConfig from "../../scripts/defaultconfig.js";
-import { FORM_MODE, HTTP_STATUS, MESSAGE_MODE } from "../../scripts/enum/enumgeneral";
+import {
+  FORM_MODE,
+  HTTP_STATUS,
+  MESSAGE_MODE,
+  VALIDATE_CODE,
+} from "../../scripts/enum/enumgeneral";
 
 export default {
   mixins: [FormatFn],
@@ -371,42 +376,13 @@ export default {
     async btnSaveOnClick(formAction) {
       try {
         let vm = this,
-          errorField = vm.validateFormData();
-        //Nếu form đang ở chế độ sửa thông tin
-        if (vm.formMode == FORM_MODE.Update)
+          hasErrorField = await vm.validateFormData();
+
+        if (!hasErrorField && vm.formMode == FORM_MODE.Update) {
           formAction = formAction.replace("Save", "Update");
-
-        if (!errorField) {
-          let isNewCode = false;
-
-          //Kiểm tra mã trùng
-          isNewCode = await vm.checkExistingCode(vm.employee.EmployeeCode);
-          if (isNewCode) {
-            //Nếu không có lỗi xảy ra, hiện popup xác nhận lưu
-            vm.createPopupMessage("CONFIRM", formAction, vm.employee.FullName);
-          } else {
-            //Nếu mã bị trùng
-            vm.createPopupMessage(
-              "NOTIFY",
-              "Duplicated",
-              vm.employee.EmployeeCode
-            );
-            //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
-            vm.firstErrorField = "validateFieldCode";
-          }
-        } else {
-          // Nếu kết quả validate không hợp lệ
-          // let action = "ValidateOnSave",
-          //   message = {
-          //     messageType: MESSAGE_MODE.Alert,
-          //     textBody: vm.firstErrorMessage,
-          //   };
-          vm.createPopupMessage(
-            "ALERT",
-            "ValidateOnSave",
-            vm.firstErrorMessage,
-            true
-          );
+          vm.doUpdateEntity(formAction);
+        } else if (!hasErrorField) {
+          vm.doSaveEntity(formAction);
         }
       } catch (error) {
         eventBus.$emit(
@@ -436,57 +412,6 @@ export default {
       }
     },
 
-    /**
-     * Xử lí sau khi xác nhận lưu dữ liệu khi đóng form
-     * CreatedBy: NHHung(30/08)
-     */
-    async confirmSaveOnClose() {
-      try {
-        let vm = this;
-
-        //Validate các trường đã nhập
-        let errorField = vm.validateFormData();
-        if (!errorField) {
-          let isNewCode = false;
-
-          //Kiểm tra mã trùng
-          isNewCode = await vm.checkExistingCode(vm.employee.EmployeeCode);
-          if (!isNewCode) {
-            //Nếu mã bị trùng
-            //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
-            vm.firstErrorField = "validateFieldCode";
-            // vm.$refs.validateFieldCode.errorMessage = vm.createPopupMessage(
-            //   "ALERT",
-            //   "Duplicated",
-            //   vm.employee.EmployeeCode
-            // );
-
-             vm.createPopupMessage(
-              "NOTIFY",
-              "Duplicated",
-              vm.employee.EmployeeCode
-            );
-          }
-        } else {
-          // Nếu kết quả validate không hợp lệ
-          vm.createPopupMessage(
-            "ALERT",
-            "ValidateOnSave",
-            vm.firstErrorMessage,
-            true
-          );
-        }
-      } catch (error) {
-        eventBus.$emit(
-          "showToastMessage",
-          "CommonError",
-          MESSAGE_MODE.ALERT,
-          "CheckExistingCode",
-          error
-        );
-      }
-    },
-
     //#endregion sự kiện trên các nút/ components
 
     /**
@@ -513,21 +438,41 @@ export default {
      * Xác định trường đầu tiên bị lỗi và thông báo lỗi
      * CreatedBy: NHHung(29/08)
      */
-    validateFormData() {
-      console.log("validateing");
+    async validateFormData() {
       let vm = this,
-        errorField = null;
+        errorField = null,
+        errorMessage = null;
 
+      //Validate định dạng các trường nhập, bắt buộc
       for (let [key] of Object.entries(vm.$refs)) {
         if (key.includes("validateField")) {
           let validateMsg = vm.$refs[key].validateInput();
           if (validateMsg != "Correct" && errorField == null) {
             errorField = key;
-            vm.firstErrorMessage = validateMsg;
+            errorMessage = validateMsg;
           }
         }
       }
+
+      //Validate trùng mã
+      if (!errorField) {
+        let validateExistCode = await vm.checkExistingCode(
+          vm.employee.EmployeeCode
+        );
+        if (!validateExistCode) {
+          errorField = "validateFieldCode";
+          vm.createPopupMessage(
+            "NOTIFY",
+            "Duplicated",
+            vm.employee.EmployeeCode
+          );
+          vm.$refs.validateFieldCode.errorCode= VALIDATE_CODE.Existed;
+        }
+      } else if (errorField && errorMessage) {
+        vm.createPopupMessage("ALERT", "ValidateOnSave", errorMessage, true);
+      }
       vm.firstErrorField = errorField;
+      vm.firstErrorMessage = errorMessage;
       return errorField;
     },
 
@@ -543,41 +488,17 @@ export default {
      * Xử lí khi nhận phản hồi từ popup messsage
      * CreatedBy: NHHung(01/09)
      */
-    processAddFormResponse(action, choice) {
+    async processPopupResponse(action, choice) {
       let vm = this;
-
+      vm.focusOnFirstErrorField();
       if (choice == "CONFIRM") {
         if (action == "CloseModifiedForm") {
-          action =
-            vm.formMode == FORM_MODE.Update ? "UpdateAndClose" : "SaveAndClose";
-          vm.confirmSaveOnClose();
+          if (vm.formMode == FORM_MODE.Update) {
+           await vm.btnSaveOnClick("UpdateAndClose");
+          } else {
+           await vm.btnSaveOnClick("SaveAndClose");
+          }
         }
-        switch (action) {
-          //Trường hợp confirm khi thông báo lỗi, focus ô bị lỗi
-          case "ValidateOnSave":
-            vm.focusOnFirstErrorField();
-            break;
-          default:
-            //Mặc địnhh kiểm tra hành động có phải là lưu hay update, gọi hàm tương ứng
-            //Thực hiện khi không có lỗi
-            if (
-              action &&
-              (action.includes("Save") || action.includes("Update")) &&
-              vm.firstErrorField == null
-            ) {
-              if (
-                vm.formMode == FORM_MODE.Add ||
-                vm.formMode == FORM_MODE.Duplicate
-              ) {
-                vm.doSaveEntity(action);
-              } else if (vm.formMode == FORM_MODE.Update) {
-                vm.doUpdateEntity(action);
-              }
-            }
-            break;
-        }
-        vm.focusOnFirstErrorField();
-        return;
       }
       //Trường hợp từ chối thì đóng form và reset dữ liệu trên form
       if (choice == "DECLINE") {
@@ -904,7 +825,7 @@ export default {
   created() {
     let vm = this;
     eventBus.$on("FromAddFormPopupResponse", (action, choice) => {
-      vm.processAddFormResponse(action, choice);
+      vm.processPopupResponse(action, choice);
     });
   },
   watch: {

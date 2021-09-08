@@ -6,6 +6,17 @@ export const GENDER = {
     Other: 2
 }
 
+export const VALIDATE_CODE = {
+    Ok: 0,
+    NotMatch: 1,
+    NotNull: 2,
+    InvalidFormat: 3,
+    InvalidValue: 4,
+    ContainAlphabetsOnly: 5,
+    Duplicated: 6,
+    Existed: 7,
+}
+
 export const MESSAGE_MODE = {
     Notify: 0,
     Confirm: 1,

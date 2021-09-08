@@ -275,6 +275,7 @@ export default {
      * CreatedBy: NHHung(30/08)
      **/
     onUpdatePagingInfo(pageNumber, pageSize) {
+      console.log(pageNumber, pageSize)
       this.pageNumber = pageNumber;
       this.pageSize = pageSize;
       this.filters = {
@@ -283,7 +284,7 @@ export default {
       //Thay đổi trạng thái để kích hoạt sự kiện tải lại trang trong table
       setTimeout(() => {
         this.reloadTable();
-      }, 100);
+      }, 200);
     },
 
     /**
@@ -335,7 +336,6 @@ export default {
      * CreatedBy: NHHung(30/08)
      */
     async getExportFile() {
-      console.log(URL.BASE_URL);
       let vm = this,
         isAllPage = "true",
         searchKey = vm.filters.searchKey,

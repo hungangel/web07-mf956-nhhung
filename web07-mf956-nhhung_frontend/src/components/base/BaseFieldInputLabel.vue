@@ -27,7 +27,10 @@
 <script>
 import ValidateFn from "../../scripts/common/validatefunction";
 import FormatFn from "../../scripts/common/formatfunction";
+import CommonFn from "../../scripts/common/commonfunction";
 import Tooltip from "./BaseTooltip.vue";
+import ResourceVI from "../../scripts/resource";
+import { VALIDATE_CODE } from "../../scripts/enum/enumgeneral";
 export default {
   name: "BaseInputLabel",
   components: {
@@ -47,7 +50,7 @@ export default {
     isRequired: Boolean,
     maxLength: Number,
 
-    //formattning props
+    //formatting props
     autoFocus: Boolean,
     isShowed: Boolean,
   },
@@ -57,6 +60,7 @@ export default {
       isEmpty: true,
       hasError: false,
       errorMessage: "",
+      errorCode: 0,
     };
   },
   methods: {
@@ -75,15 +79,19 @@ export default {
      */
     validateInput() {
       let vm = this,
-      isRequired= vm.isRequired;
+        isRequired = vm.isRequired;
 
       vm.hasError = false;
       //Những trường nhập cần validate
-      let PopupMessage = ValidateFn.validateInputFormat( vm.modelData, vm.dataType, isRequired );
+      let PopupMessage = ValidateFn.validateInputFormat(
+        vm.modelData,
+        vm.dataType,
+        isRequired
+      );
 
       if (PopupMessage != "Correct") {
         vm.hasError = true;
-        vm.errorMessage = FormatFn.formatString( PopupMessage, vm.labelText );
+        vm.errorMessage = FormatFn.formatString(PopupMessage, vm.labelText);
       }
       //Nếu có lỗi thì emit thông báo lỗi
       if (vm.hasError) return vm.errorMessage;
@@ -130,6 +138,15 @@ export default {
     //focus vào ô nhập nếu ô này có autofocus
     isShowed: function() {
       this.doFocus();
+    },
+
+    errorCode: function() {
+      let errorName = CommonFn.getKeyByValue(VALIDATE_CODE, this.errorCode);
+      this.hasError = true;
+      this.errorMessage = FormatFn.formatString(
+        ResourceVI.PopupMessage[errorName],
+        this.labelText
+      );
     },
   },
 };

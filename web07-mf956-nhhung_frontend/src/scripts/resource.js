@@ -29,7 +29,7 @@ export default class ResourceVI {
         Customer: "Khách hàng"
     }
 
-    static pageSizeText = "bản ghi trên trang";
+    static PageSizeText = "bản ghi trên trang";
 
     //Các tùy chọn chức năng với đối tượng trong bảng.
     static optionTexts = {
@@ -74,10 +74,13 @@ export default class ResourceVI {
         ExportFileFailed: "Xuất khẩu tệp thất bại.",
 
         //Validate Message
+        NotMatch: "{0} không trùng khớp.",
         NotNull: "{0} không được để trống.",
         InvalidFormat: "{0} sai định dạng.",
+        InvalidValue: "{0} không hợp lệ.",
         ContainAlphabetsOnly: "{0} chỉ chứa các chữ cái.",
         Duplicated: "Nhân viên <{0}> đã tồn tại! Vui lòng kiểm tra lại.",
+        Existed: "{0} đã tồn tại."
     }
 
     static ButtonText = {
