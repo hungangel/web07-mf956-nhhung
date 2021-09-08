@@ -387,7 +387,7 @@ export default {
           } else {
             //Nếu mã bị trùng
             vm.createPopupMessage(
-              "ALERT",
+              "NOTIFY",
               "Duplicated",
               vm.employee.EmployeeCode
             );
@@ -455,8 +455,14 @@ export default {
             //Nếu mã bị trùng
             //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
             vm.firstErrorField = "validateFieldCode";
-            vm.$refs.validateFieldCode.errorMessage = vm.createPopupMessage(
-              "ALERT",
+            // vm.$refs.validateFieldCode.errorMessage = vm.createPopupMessage(
+            //   "ALERT",
+            //   "Duplicated",
+            //   vm.employee.EmployeeCode
+            // );
+
+             vm.createPopupMessage(
+              "NOTIFY",
               "Duplicated",
               vm.employee.EmployeeCode
             );

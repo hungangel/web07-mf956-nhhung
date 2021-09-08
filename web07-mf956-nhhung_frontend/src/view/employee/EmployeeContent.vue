@@ -31,8 +31,8 @@
               v-model="searchKey"
               @input="onUpdateFilter"
             />
-            <ButtonIcon @btnClick="reloadTable" iconName="icon-24 i-refresh" />
-            <ButtonIcon @btnClick="exportFile" iconName="icon-24 i-excel" />
+            <ButtonIcon @btnClick="reloadTable" iconName="icon-24 i-refresh" :title="'Làm mới trang'"/>
+            <ButtonIcon @btnClick="exportFile" iconName="icon-24 i-excel" :title="'Xuất tệp excel'"/>
           </div>
         </div>
       </div>

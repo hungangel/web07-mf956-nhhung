@@ -2,6 +2,7 @@
   <button
     :class="['button', subClass, iconName]"
     @click="$emit('btnClick')"
+    :title="title"
   >
     {{ buttonText }}
   </button>
@@ -10,6 +11,7 @@
 export default {
   name: "ButtonIcon",
   props: {
+    title:String,
     iconName: String,
     buttonText: String,
     subClass: String,

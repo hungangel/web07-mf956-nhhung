@@ -20,7 +20,7 @@
 
 .paddingdiv {
     background-color: #fff !important;
-    border: 0;
+    border-color: transparent !important;
     padding: 0;
 }
 

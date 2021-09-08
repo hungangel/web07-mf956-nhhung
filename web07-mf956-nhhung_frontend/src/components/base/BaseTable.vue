@@ -8,7 +8,7 @@
       <table>
         <thead>
           <tr>
-            <th class="mw-16 white-bg bd-0"></th>
+            <th class="paddingdiv mw-16 white-bg bd-0"></th>
             <th
               v-for="(thItem, thIndex) in thList"
               :key="thIndex"

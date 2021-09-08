@@ -45,7 +45,7 @@ export default {
     onInput: _.debounce(function(value) {
       this.$emit("input", value);
       if (this.modelData.length > 0) this.isEmpty = false;
-    }, 1500),
+    }, 1000),
   },
   watch: {
     originValue: function() {
