@@ -1,6 +1,7 @@
 import EntityModel from "../model/entitymodel";
-import DefautlConfig from "../defautlconfig";
-import commonfunction from './commonfunction'
+import DefaultConfig from "../defaultconfig.js";
+import CommonFn from './commonfunction'
+
 class FormatFn {
     formatTableData(entities, entityType) {
         let vm = this;
@@ -28,7 +29,7 @@ class FormatFn {
             case 'Number':
                 return this.formatMoney(datax)
             case 'Enum':
-                return commonfunction.getEnumText(propName, data);
+                return CommonFn.getEnumText(propName, data);
             default:
                 return data;
         }
@@ -83,9 +84,9 @@ class FormatFn {
             let dateArr = thisdate.split("T");
             if (dateArr[0].length == 10) {
                 let date = new Date(dateArr[0]);
-                if (DefautlConfig.DateFormat == "DD/MM/YYYY")
+                if (DefaultConfig.DateFormat == "DD/MM/YYYY")
                     return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
-                else if (DefautlConfig.DateFormat == "MM/DD/YYYY") return ("0" + (date.getMonth() + 1)).slice(-2) + '/' + ("0" + (date.getDate())).slice(-2) + '/' + date.getFullYear();
+                else if (DefaultConfig.DateFormat == "MM/DD/YYYY") return ("0" + (date.getMonth() + 1)).slice(-2) + '/' + ("0" + (date.getDate())).slice(-2) + '/' + date.getFullYear();
 
             }
         }

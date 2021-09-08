@@ -1,6 +1,6 @@
 // export default class EnumGeneral {
 
-export const Gender = {
+export const GENDER = {
     Male: 0,
     Female: 1,
     Other: 2
@@ -10,7 +10,8 @@ export const MESSAGE_MODE = {
     Notify: 0,
     Confirm: 1,
     Full: 2,
-    Alert: 3
+    Alert: 3,
+    Inform: 4,
 }
 
 export const TABLE_OPTION = {
@@ -40,6 +41,6 @@ export const HTTP_STATUS = {
     BadRequest: 400,
 }
 
-export default { Gender, MESSAGE_MODE, TABLE_OPTION, FORM_MODE, FORM_ACTION, HTTP_STATUS }
+export default { GENDER, MESSAGE_MODE, TABLE_OPTION, FORM_MODE, FORM_ACTION, HTTP_STATUS }
 
 // }

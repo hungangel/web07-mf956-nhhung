@@ -1,6 +1,6 @@
 import ResourceVI from './resource'
 
-export default class DefautlConfig {
+export default class DefaultConfig {
     static DateFormat = "DD/MM/YYYY"
 
     static ExportFileName = ResourceVI.ExportFileName;
@@ -65,6 +65,18 @@ export default class DefautlConfig {
             thClass: "a-left minw-250",
         },
         {
+            fieldName: "MobilePhoneNumber",
+            dataType: "Text",
+            fieldText: "ĐT DI ĐỘNG",
+            thClass: "a-left minw-150",
+        },
+        {
+            fieldName: "LandlinePhoneNumber",
+            dataType: "Text",
+            fieldText: "ĐT CỐ ĐỊNH",
+            thClass: "a-left minw-150",
+        },
+        {
             fieldName: "BankAccountNumber",
             dataType: "Text",
             fieldText: "SỐ TÀI KHOẢN",
@@ -82,17 +94,6 @@ export default class DefautlConfig {
             fieldText: "CHI NHÁNH TK NGÂN HÀNG",
             thClass: "a-left minw-250",
         },
-        {
-            fieldName: "MobilePhoneNumber",
-            dataType: "Text",
-            fieldText: "ĐT DI ĐỘNG",
-            thClass: "a-left minw-150",
-        },
-        {
-            fieldName: "LandlinePhoneNumber",
-            dataType: "Text",
-            fieldText: "ĐT CỐ ĐỊNH",
-            thClass: "a-left minw-150",
-        },
+
     ]
 }

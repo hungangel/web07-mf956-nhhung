@@ -3,8 +3,8 @@ import * as EnumGeneral from "../enum/enumgeneral";
 class CommonFn {
     getEnumText(enumClass, enumValue) {
 
-        let enumResource = ResourceVI[enumClass];
-        let enumEnum = EnumGeneral[enumClass];
+        let enumResource = ResourceVI[enumClass]
+        let enumEnum = EnumGeneral[enumClass.toString().toUpperCase()];
 
         for (let eName in enumResource) {
             if (enumEnum[eName] == enumValue) {

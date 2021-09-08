@@ -13,6 +13,7 @@
 <script>
 import ResourceVI from "../../scripts/resource";
 import { eventBus } from "../../main";
+import { MESSAGE_MODE } from '../../scripts/enum/enumgeneral';
 export default {
   name: "ToastMessage",
   data() {
@@ -44,26 +45,22 @@ export default {
       this.toastMessage = ResourceVI.PopupMessage[actionResult];
 
       switch (toastType) {
-        case "ALERT":
+        case MESSAGE_MODE.Alert:
           vm.toastIcon = "i-error";
           vm.toastIconClose = "icon-red-cross";
           break;
-        case "Accept":
-          vm.toastIcon = "i-warning";
-          vm.toastIconClose = "icon-orange-cross";
-          break;
-        case "INFORM":
+        case MESSAGE_MODE.Inform:
           vm.toastIcon = "icon-toast-i";
           vm.toastIconClose = "icon-blue-cross";
           break;
-        case "NOTIFY":
+        case MESSAGE_MODE.Notify:
           vm.toastIcon = "i-done-32";
           vm.toastIconClose = "icon-green-cross";
           break;
       }
       setTimeout(() => {
         vm.isShow = false;
-      }, 4000);
+      }, 3000);
     },
   },
   created() {

@@ -6,8 +6,16 @@
         <div class="md-header">
           <div class="flex">
             <div class="title">Thông tin nhân viên</div>
-            <Checkbox :checkboxText="'Là khách hàng'" />
-            <Checkbox :checkboxText="'Là nhà cung cấp'" />
+            <Checkbox
+              @cbclick="checkIsCustomer"
+              :isChecked="isCustomer"
+              :checkboxText="'Là khách hàng'"
+            />
+            <Checkbox
+              @cbclick="checkIsProvider"
+              :isChecked="isProvider"
+              :checkboxText="'Là nhà cung cấp'"
+            />
           </div>
 
           <div class="flex">
@@ -56,7 +64,7 @@
                   :isRequired="true"
                   :selectedId="'0'"
                   v-model="employee.DepartmentID"
-                  :originValue="employee.DepartmentID"
+                  :originValue="employee.DepartmentID + ''"
                   :updateCombobox="updateCombobox"
                   :numberOfCol="2"
                   ref="validateFieldDep"
@@ -260,8 +268,8 @@ import Button from "../../components/base/BaseButton.vue";
 import { eventBus } from "../../main.js";
 import ResourceVI from "../../scripts/resource.js";
 import URL from "../../api/config/api_config.js";
-import DefautlConfig from "../../scripts/defautlconfig";
-import { FORM_MODE, HTTP_STATUS } from "../../scripts/enum/enumgeneral";
+import DefaultConfig from "../../scripts/defaultconfig.js";
+import { FORM_MODE, HTTP_STATUS, MESSAGE_MODE } from "../../scripts/enum/enumgeneral";
 
 export default {
   mixins: [FormatFn],
@@ -278,7 +286,7 @@ export default {
     return {
       originEntity: {},
       employee: {},
-      defaultDateFormat: DefautlConfig.DateFormat,
+      defaultDateFormat: DefaultConfig.DateFormat,
       isShowed: true,
       updateCombobox: true,
       triggerValidate: true,
@@ -286,6 +294,9 @@ export default {
       entity: "Employee",
       firstErrorMessage: "",
       keyCombination: "",
+
+      isCustomer: false,
+      isProvider: false,
     };
   },
   props: {
@@ -299,6 +310,22 @@ export default {
   },
   methods: {
     //#region Sự kiện trên các nút / components
+
+    /**
+     * Sự kiện bấm ô tích chọn là khách hàng
+     * CreatedBy: NHHung(02/09)
+     */
+    checkIsCustomer() {
+      this.isCustomer = !this.isCustomer;
+    },
+
+    /**
+     * Sự kiện bấm ô tích chọn là nhà cung cấp
+     * CreatedBy: NHHung(02/09)
+     */
+    checkIsProvider() {
+      this.isProvider = !this.isProvider;
+    },
 
     /**
      * Xử lí sự kiện keydown trên modal
@@ -369,18 +396,23 @@ export default {
           }
         } else {
           // Nếu kết quả validate không hợp lệ
-          let action = "ValidateOnSave",
-            message = {
-              messageType: "ALERT",
-              textBody: vm.firstErrorMessage,
-            };
-          eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
+          // let action = "ValidateOnSave",
+          //   message = {
+          //     messageType: MESSAGE_MODE.Alert,
+          //     textBody: vm.firstErrorMessage,
+          //   };
+          vm.createPopupMessage(
+            "ALERT",
+            "ValidateOnSave",
+            vm.firstErrorMessage,
+            true
+          );
         }
       } catch (error) {
         eventBus.$emit(
           "showToastMessage",
           "CommonError",
-          "ALERT",
+          MESSAGE_MODE.Alert,
           "CheckExistingCode",
           error
         );
@@ -421,16 +453,15 @@ export default {
           isNewCode = await vm.checkExistingCode(vm.employee.EmployeeCode);
           if (!isNewCode) {
             //Nếu mã bị trùng
-            vm.createPopupMessage(
+            //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
+            vm.firstErrorField = "validateFieldCode";
+            vm.$refs.validateFieldCode.errorMessage = vm.createPopupMessage(
               "ALERT",
               "Duplicated",
               vm.employee.EmployeeCode
             );
-            //Gán trường mã là ô nhập đầu tiên bị lỗi (focus sau khi xác nhận)
-            vm.firstErrorField = "validateFieldCode";
           }
         } else {
-          console.log("validate failed ok");
           // Nếu kết quả validate không hợp lệ
           vm.createPopupMessage(
             "ALERT",
@@ -443,7 +474,7 @@ export default {
         eventBus.$emit(
           "showToastMessage",
           "CommonError",
-          "ALERT",
+          MESSAGE_MODE.ALERT,
           "CheckExistingCode",
           error
         );
@@ -626,7 +657,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "CommonError",
-              "ALERT",
+              MESSAGE_MODE.Alert,
               "CheckExistingCode",
               error
             );
@@ -651,7 +682,7 @@ export default {
         eventBus.$emit(
           "showToastMessage",
           "GetInfoFailed",
-          "ALERT",
+          MESSAGE_MODE.Alert,
           "GetInfo",
           error
         );
@@ -676,7 +707,7 @@ export default {
         eventBus.$emit(
           "showToastMessage",
           "GetInfoFailed",
-          "ALERT",
+          MESSAGE_MODE.Alert,
           "GetInfo",
           error
         );
@@ -722,7 +753,6 @@ export default {
       this.$emit("changeFormMode", FORM_MODE.Add);
       if (formAction.includes("Close")) {
         vm.$emit("hideAddForm");
-        vm.$emit("callReloadTable");
       } else {
         (async () => {
           let newEntityCode = await vm.getNewEntityCode(),
@@ -734,6 +764,7 @@ export default {
           vm.isShowed = !vm.isShowed;
         })();
       }
+      vm.$emit("callReloadTable");
     },
     //#endregion
 
@@ -800,7 +831,7 @@ export default {
           : ResourceVI.PopupMessage[actionResult];
       } else {
         if (responseData) {
-          messageType = "ALERT";
+          messageType = MESSAGE_MODE.Alert;
           textBody = responseData.userMsg
             ? responseData.userMsg
             : ResourceVI.PopupMessage[actionResult];

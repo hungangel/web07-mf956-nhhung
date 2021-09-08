@@ -1,0 +1,65 @@
+.mx-calendar-header-label * {
+    color: #000000 !important;
+    font-weight: 600;
+}
+
+.mx-table-date .today div {
+    color: #2ca01c;
+    font-weight: 600;
+}
+
+.mx-table-date * {
+    color: #757575;
+}
+
+.mx-table-date thead tr th {
+    border-bottom: 1px solid #e0e0e0;
+    color: #757575;
+    font-weight: 600;
+}
+
+.mx-calendar-content .cell {
+    background-color: #ffffff;
+}
+
+.mx-table-date td.cell {
+    height: 32px !important;
+    width: 32px !important;
+    box-sizing: unset;
+    text-align: center;
+    box-sizing: border-box;
+    /* border: 1px solid transparent; */
+    /* padding-left: 11px; */
+}
+
+.mx-table-date td.cell:hover {
+    background-color: #fff;
+    /* border: 1px solid #2ca01c; */
+}
+
+.mx-calendar-content .cell.active {
+    background-color: #ffffff !important;
+}
+
+.mx-calendar-content .cell.disabled {
+    background-color: #ffffff !important;
+}
+
+.mx-calendar-content .cell.active div {
+    background-color: rgba(44, 160, 28, .2) !important;
+}
+
+.mx-table-date td.cell div {
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    height: 32px !important;
+    width: 32px !important;
+    box-sizing: border-box;
+    line-height: 34px;
+}
+
+.mx-table-date td.cell div:hover {
+    background-color: #fff;
+    border: 1px solid #2ca01c;
+}

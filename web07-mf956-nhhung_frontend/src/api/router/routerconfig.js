@@ -5,7 +5,7 @@ Vue.use(VueRouter);
 
 const routes = [
     { path: '/', name: 'Home', component: EmployeeContent },
-    { path: '/dict/employee', component: EmployeeContent },
+    { path: '/dict/employee', name: 'EmployeeContent', component: EmployeeContent },
 ]
 const router = new VueRouter({
     mode: 'history',

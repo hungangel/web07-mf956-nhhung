@@ -107,7 +107,7 @@ import OptionDropdown from "./optiondropdown/BaseContextButton.vue";
 import Checkbox from "./BaseCheckbox.vue";
 import OptionMenu from "./optiondropdown/BaseContextMenu.vue";
 import URL from "../../api/config/api_config.js";
-import { HTTP_STATUS } from "../../scripts/enum/enumgeneral";
+import { HTTP_STATUS, MESSAGE_MODE } from "../../scripts/enum/enumgeneral";
 export default {
   name: "BaseTable",
   props: {
@@ -206,19 +206,20 @@ export default {
 
           //Emit thông tin phân trang hiện tại lên Content
           this.$emit("onTableLoadDone", resData.TotalRecord, resData.TotalPage);
-          eventBus.$emit("showToastMessage", "LoadDataSuccess", "NOTIFY");
+          // eventBus.$emit("showToastMessage", "LoadDataSuccess", "NOTIFY");
+          eventBus.$emit("showToastMessage", "LoadDataSuccess",MESSAGE_MODE.Notify);
           vm.mousePos = 0;
           vm.checkTotalSelected();
         } else if (response && response.status == HTTP_STATUS.NoContent) {
           //Dữ liệu trả về rỗng
-          eventBus.$emit("showToastMessage", "NoContent", "ALERT");
+          eventBus.$emit("showToastMessage", "NoContent",MESSAGE_MODE.Alert);
           this.$emit("onTableLoadDone", 0, 1);
         }
       } catch (error) {
         eventBus.$emit(
           "showToastMessage",
           "LoadDataFailed",
-          "ALERT",
+          MESSAGE_MODE.Alert,
           "LoadTableData",
           error
         );
@@ -280,7 +281,7 @@ export default {
         vm.allSelected = isAllSelected;
         return selectedCount;
       } catch (error) {
-        eventBus.$emit("showToastMessage", "CommonError", "ALERT", "", error);
+        eventBus.$emit("showToastMessage", "CommonError",MESSAGE_MODE.Alert, "", error);
       }
     },
 
@@ -305,7 +306,7 @@ export default {
         vm.selectedSet = tmpSelectedSet;
         vm.$emit("checkOnItem", vm.checkTotalSelected());
       } catch (error) {
-        eventBus.$emit("showToastMessage", "CommonError", "ALERT", "", error);
+        eventBus.$emit("showToastMessage", "CommonError", MESSAGE_MODE.Alert, "", error);
       }
     },
 
@@ -338,7 +339,7 @@ export default {
           vm.reloadTableData();
         })
         .catch((error) => {
-          eventBus.$emit("showToastMessage", "DeleteFailed", "ALERT", error);
+          eventBus.$emit("showToastMessage", "DeleteFailed", MESSAGE_MODE.Alert, error);
         });
     },
 
@@ -358,7 +359,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "GetNewCodeFailed",
-              "ALERT",
+              MESSAGE_MODE.Alert,
               error
             );
           });
@@ -382,7 +383,7 @@ export default {
             eventBus.$emit(
               "showToastMessage",
               "GetInfoFailed",
-              "ALERT",
+              MESSAGE_MODE.Alert,
               "",
               error
             );

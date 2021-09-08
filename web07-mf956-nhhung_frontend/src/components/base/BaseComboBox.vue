@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="combobox-zone"
-    :class="[subClass, hasError ? 'error ' : '']"
-    v-on-clickaway="cbxOnClickAway"
-  >
+  <div class="combobox-zone" :class="[subClass, hasError ? 'error ' : '']">
     <Tooltip :errorMessage="errorMessage" />
     <label
       >{{ labelText }}
@@ -59,7 +55,7 @@
             { highlighted: itemIndex == currentFocus },
           ]"
           :key="itemIndex"
-          @click="[clickItem(itemIndex), $refs.currentCombobox.blur()]"
+          @click="[clickItem(itemIndex)]"
         >
           <div class="item-col  pd-r-26" :class="{ 'd-none': numberOfCol < 2 }">
             {{ item[`${entity}Code`] }}
@@ -125,7 +121,8 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     cbxOnClickAway() {
-      this.closed = true;
+      console.log("clickaway");
+      // this.closed = true;
     },
 
     /**
@@ -176,18 +173,19 @@ export default {
       let vm = this,
         item = vm.items[itemIndex];
 
-      vm.currentId = item[vm.itemId];
-      vm.inputValue = item[vm.itemName];
-      vm.closed = true;
-      vm.currentFocus = -1;
-      vm.hasError = false;
-
       let digitValue = Number(vm.currentId);
       if (!isNaN(digitValue)) {
         vm.$emit("input", digitValue);
       } else {
-        vm.$emit("input", vm.currentId);
+        vm.$emit("input", item[vm.itemId]);
       }
+      vm.currentId = item[vm.itemId];
+      vm.inputValue = item[vm.itemName];
+      setTimeout(() => {
+        vm.closed = true;
+      }, 250);
+      vm.currentFocus = -1;
+      vm.hasError = false;
     },
 
     /**
@@ -264,7 +262,7 @@ export default {
     resetFieldInput() {
       this.currentId = "";
       this.inputValue = "";
-      this.hasError= false;
+      this.hasError = false;
     },
 
     /**
@@ -273,22 +271,18 @@ export default {
      * CreatedBy: NHHung(29/08)
      */
     keydownOnItem(event) {
-      let vm = this,
-        preventKeys = "ArrowUp ArrowDown Enter";
-        // tmpVal = event.target.value;
-      if (preventKeys.search(event.code) >= 0) {
-        event.preventDefault();
-      }
-      // vm.inputValue = tmpVal;
+      let vm = this;
 
       switch (event.key) {
         //Trường hợp bấm lên xuống chọn item
         case "ArrowDown":
+          event.preventDefault();
           if (vm.currentFocus < vm.items.length - 1 && !vm.closed) {
             vm.currentFocus = vm.currentFocus + 1;
           }
           break;
         case "ArrowUp":
+          event.preventDefault();
           if (vm.currentFocus > 0 && !vm.closed) {
             vm.currentFocus = vm.currentFocus - 1;
           }
@@ -296,6 +290,7 @@ export default {
 
         //Trường hợp bấm Enter chọn item đang focus
         case "Enter":
+          event.preventDefault();
           if (vm.currentFocus >= 0) {
             vm.clickItem(vm.currentFocus);
           }
@@ -307,6 +302,7 @@ export default {
 
         //Trường hợp bấm Esc để đóng combobox
         case "Escape":
+          event.preventDefault();
           vm.closeCombobox();
           break;
       }

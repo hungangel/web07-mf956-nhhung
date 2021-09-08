@@ -85,12 +85,12 @@ import ButtonIcon from "../../components/base/BaseButtonIcon.vue";
 import FieldInputIcon from "../../components/base/BaseFieldInputIcon.vue";
 import PageNavigation from "../../components/base/BasePageNavigation.vue";
 import Table from "../../components/base/BaseTable.vue";
-import AddEmployeeForm from "./AddEmployeeForm.vue";
+import AddEmployeeForm from "./EmployeeForm.vue";
 import FormatFn from "../../scripts/common/formatfunction.js";
 import ResourceVI from "../../scripts/resource.js";
 import URL from "../../api/config/api_config.js";
-import DefautlConfig from "../../scripts/defautlconfig.js";
-import { HTTP_STATUS } from "../../scripts/enum/enumgeneral.js";
+import DefaultConfig from "../../scripts/defaultconfig.js";
+import { FORM_MODE, HTTP_STATUS, MESSAGE_MODE } from "../../scripts/enum/enumgeneral.js";
 export default {
   name: "EmployeePage",
   components: {
@@ -159,7 +159,7 @@ export default {
      */
     showAddForm() {
       this.isHidden = false;
-      this.formMode = 0;
+      this.formMode = FORM_MODE.Add;
       this.toggleForm = !this.toggleForm;
     },
 
@@ -188,7 +188,7 @@ export default {
      */
     dbClickOnTR(selectedEntityID) {
       this.selectedEntityID = selectedEntityID;
-      this.formMode = 1;
+      this.formMode = FORM_MODE.Add;
       this.isHidden = false;
       this.toggleForm = !this.toggleForm;
     },
@@ -204,13 +204,16 @@ export default {
           vm.requestDelete(selectedEntity);
           break;
         case "RequestEdit":
-          vm.formMode = 1;
+          vm.formMode = FORM_MODE.Update;
           break;
         case "RequestDuplicate":
-          vm.formMode = 2;
+          vm.formMode = FORM_MODE.Duplicate;
           break;
       }
-      if (this.formMode == 1 || this.formMode == 2) {
+      if (
+        this.formMode == FORM_MODE.Update ||
+        this.formMode == FORM_MODE.Duplicate
+      ) {
         vm.selectedEntityID = selectedEntity[`${vm.entityClass}ID`];
         vm.isHidden = false;
         vm.toggleForm = !vm.toggleForm;
@@ -218,9 +221,9 @@ export default {
     },
 
     /**
- *Hiển thị thông báo hỏi xóa 1 bản ghi
- CreatedBy: NHHung(01/09)
- */
+     *Hiển thị thông báo hỏi xóa 1 bản ghi
+    CreatedBy: NHHung(01/09)
+    */
     requestDelete(selectedEntity) {
       //nếu hàng này dược chọn
       let vm = this,
@@ -305,7 +308,7 @@ export default {
           //Nếu có dữ liệu trả về thì tạo element cho phép tải tệp
           let url = window.URL.createObjectURL(new Blob([response.data])),
             a = document.createElement("a"),
-            filename = DefautlConfig.ExportFileName;
+            filename = DefaultConfig.ExportFileName;
 
           a.href = url;
           a.setAttribute("download", filename);
@@ -320,7 +323,7 @@ export default {
         eventBus.$emit(
           "showToastMessage",
           "ExportFileFailed",
-          "ALERT",
+          MESSAGE_MODE.Alert,
           "ExportFileFailed",
           error
         );
@@ -337,7 +340,7 @@ export default {
         isAllPage = "true",
         searchKey = vm.filters.searchKey,
         //Các trường được xuất thông tin
-        propNames = DefautlConfig.ExportField,
+        propNames = DefaultConfig.ExportField,
         filterUrl =
           `${URL.BASE_URL}/${vm.entityUrl}/Export?` +
           `pageSize=${vm.pageSize}&pageNumber=${vm.pageNumber}&isAllPage=${isAllPage}`;
@@ -367,7 +370,7 @@ export default {
           eventBus.$emit(
             "showToastMessage",
             "DeleteFailed",
-            "ALERT",
+            MESSAGE_MODE.Alert,
             "DeleteFailed",
             error
           );
@@ -401,7 +404,7 @@ export default {
   },
   mounted() {
     //Mảng các cột của table hiển thị
-    this.thList = DefautlConfig.TableColumn;
+    this.thList = DefaultConfig.TableColumn;
   },
 };
 </script>
