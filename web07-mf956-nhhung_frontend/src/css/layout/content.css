@@ -86,6 +86,11 @@
     height: 40px;
 }
 
+.content .toolbar .toolbar-left .button {
+    /* width: 200px; */
+    border-radius: 19px;
+}
+
 .content .toolbar .toolbar-right {
     height: 40px;
 }

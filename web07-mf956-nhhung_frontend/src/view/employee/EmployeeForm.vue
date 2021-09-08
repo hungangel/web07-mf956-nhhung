@@ -302,6 +302,13 @@ export default {
 
       isCustomer: false,
       isProvider: false,
+
+      validateFields: [
+        "validateFieldCode",
+        "validateFieldFullName",
+        "validateFieldDep",
+        "validateFieldEmail",
+      ],
     };
   },
   props: {
@@ -444,15 +451,14 @@ export default {
         errorMessage = null;
 
       //Validate định dạng các trường nhập, bắt buộc
-      for (let [key] of Object.entries(vm.$refs)) {
-        if (key.includes("validateField")) {
-          let validateMsg = vm.$refs[key].validateInput();
-          if (validateMsg != "Correct" && errorField == null) {
-            errorField = key;
-            errorMessage = validateMsg;
-          }
+      // for (let [key] of Object.entries(vm.$refs)) {
+      vm.validateFields.forEach((key) => {
+        let validateMsg = vm.$refs[key].validateInput();
+        if (validateMsg != "Correct" && errorField == null) {
+          errorField = key;
+          errorMessage = validateMsg;
         }
-      }
+      });
 
       //Validate trùng mã
       if (!errorField) {
@@ -466,7 +472,7 @@ export default {
             "Duplicated",
             vm.employee.EmployeeCode
           );
-          vm.$refs.validateFieldCode.errorCode= VALIDATE_CODE.Existed;
+          vm.$refs.validateFieldCode.errorCode = VALIDATE_CODE.Existed;
         }
       } else if (errorField && errorMessage) {
         vm.createPopupMessage("ALERT", "ValidateOnSave", errorMessage, true);
@@ -494,9 +500,9 @@ export default {
       if (choice == "CONFIRM") {
         if (action == "CloseModifiedForm") {
           if (vm.formMode == FORM_MODE.Update) {
-           await vm.btnSaveOnClick("UpdateAndClose");
+            await vm.btnSaveOnClick("UpdateAndClose");
           } else {
-           await vm.btnSaveOnClick("SaveAndClose");
+            await vm.btnSaveOnClick("SaveAndClose");
           }
         }
       }

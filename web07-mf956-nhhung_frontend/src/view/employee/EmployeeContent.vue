@@ -363,6 +363,7 @@ export default {
         .delete(`${URL.BASE_URL}/${vm.entityUrl}/${vm.selectedEntityID}`)
         .then(() => {
           eventBus.$emit("showToastMessage", "DeleteComplete");
+          vm.$refs.ctable.selectThisTR(vm.selectedEntityID)
           vm.reloadTable();
         })
         .catch((error) => {
