@@ -179,7 +179,6 @@ export default {
       vm.inputValue = item[vm.itemName];
       
       let digitValue = Number(vm.currentId);
-      console.log(digitValue);
       if (!isNaN(digitValue)) {
         vm.$emit("input", digitValue);
       } else {

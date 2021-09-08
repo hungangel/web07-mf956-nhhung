@@ -66,7 +66,7 @@ export default {
     },
   },
   mounted() {
-    this.options = ResourceVI.optionTexts[this.entityClass];
+    this.options = ResourceVI.OptionText[this.entityClass];
   },
   watch: {
     itemId: function() {},

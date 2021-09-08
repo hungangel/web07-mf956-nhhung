@@ -13,6 +13,7 @@
           :icon="'i-' + menuItem.menuFunction"
           :contentExpanded="contentExpanded"
           :menuItemFunction="menuItem.menuFunction"
+          :routerPath="menuItem.routerPath ? menuItem.routerPath : 'notready'"
           :currentFunction="currentFunction"
           @clickMenuItem="onClickMenuItem"
           :menuItemText="menuItem.menuItemText"
@@ -24,7 +25,7 @@
 
 <script>
 import "../../../css/layout/menu.css";
-import ResourceVI from '../../../scripts/resource';
+import ResourceVI from "../../../scripts/resource";
 import MenuItem from "./MenuItem.vue";
 export default {
   name: "TheMenu",
@@ -38,63 +39,64 @@ export default {
       menuItems: [
         {
           menuFunction: "dashboard",
-          menuItemText: ResourceVI.LeftMenuText["dashboard"],
+          menuItemText: ResourceVI.LeftMenuText["Dashboard"],
+          routerPath:'/dict/employee'
         },
         {
           menuFunction: "cash",
-          menuItemText: ResourceVI.LeftMenuText["cash"],
+          menuItemText: ResourceVI.LeftMenuText["Cash"],
         },
         {
           menuFunction: "deposit",
-          menuItemText: ResourceVI.LeftMenuText["deposit"],
+          menuItemText: ResourceVI.LeftMenuText["Deposit"],
         },
         {
           menuFunction: "buy",
-          menuItemText: ResourceVI.LeftMenuText["buy"],
+          menuItemText: ResourceVI.LeftMenuText["Buy"],
         },
         {
           menuFunction: "sell",
-          menuItemText: ResourceVI.LeftMenuText["sell"],
+          menuItemText: ResourceVI.LeftMenuText["Sell"],
         },
         {
           menuFunction: "invoice",
-          menuItemText: ResourceVI.LeftMenuText["invoice"],
+          menuItemText: ResourceVI.LeftMenuText["Invoice"],
         },
         {
           menuFunction: "warehouse",
-          menuItemText: ResourceVI.LeftMenuText["warehouse"],
+          menuItemText: ResourceVI.LeftMenuText["Warehouse"],
         },
         {
           menuFunction: "tool",
-          menuItemText: ResourceVI.LeftMenuText["tool"],
+          menuItemText: ResourceVI.LeftMenuText["Tool"],
         },
         {
           menuFunction: "assets",
-          menuItemText: ResourceVI.LeftMenuText["assets"],
+          menuItemText: ResourceVI.LeftMenuText["Assets"],
         },
         {
           menuFunction: "tax",
-          menuItemText: ResourceVI.LeftMenuText["tax"],
+          menuItemText: ResourceVI.LeftMenuText["Tax"],
         },
         {
           menuFunction: "price",
-          menuItemText: ResourceVI.LeftMenuText["price"],
+          menuItemText: ResourceVI.LeftMenuText["Price"],
         },
         {
           menuFunction: "sumary",
-          menuItemText: ResourceVI.LeftMenuText["sumary"],
+          menuItemText: ResourceVI.LeftMenuText["Sumary"],
         },
         {
           menuFunction: "budget",
-          menuItemText: ResourceVI.LeftMenuText["budget"],
+          menuItemText: ResourceVI.LeftMenuText["Budget"],
         },
         {
           menuFunction: "report",
-          menuItemText: ResourceVI.LeftMenuText["report"],
+          menuItemText: ResourceVI.LeftMenuText["Report"],
         },
         {
           menuFunction: "analysis",
-          menuItemText: ResourceVI.LeftMenuText["analysis"],
+          menuItemText: ResourceVI.LeftMenuText["Analysis"],
         },
       ],
     };

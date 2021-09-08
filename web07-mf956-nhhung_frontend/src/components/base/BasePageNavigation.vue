@@ -135,7 +135,6 @@ export default {
      */
     updatePageSize(newPageSize) {
       let vm = this;
-      console.log(newPageSize)
       vm.adjustCenterButtonNumber();
       vm.$emit("onUpdatePagingInfo", vm.currentPageNumber, newPageSize);
     },

@@ -50,14 +50,14 @@ export default {
      *  CreatedBy: NHHung(29/08)
      */
     optionOnClick() {
-      let action = ResourceVI.optionTexts[this.entityClass][0].optionAction;
+      let action = ResourceVI.OptionText[this.entityClass][0].optionAction;
       this.$emit("optionOnClick", action, this.optionItemValue);
     },
   },
   mounted() {
-    this.options = ResourceVI.optionTexts[this.entityClass];
+    this.options = ResourceVI.OptionText[this.entityClass];
     this.defaultOptionText =
-      ResourceVI.optionTexts[this.entityClass][0].optionText;
+      ResourceVI.OptionText[this.entityClass][0].optionText;
   },
 };
 </script>

@@ -1,21 +1,21 @@
 export default class ResourceVI {
 
     static LeftMenuText = {
-        dashboard: "Tổng quan",
-        cash: "Tiền mặt",
-        deposit: "Tiền gửi",
-        buy: "Mua hàng",
-        sell: "Bán hàng",
-        invoice: "Quản lý hóa đơn",
-        warehouse: "Kho",
-        tool: "Công cụ dụng cụ",
-        assets: "Tài sản cố định",
-        tax: "Thuế",
-        price: "Giá thành",
-        sumary: "Tổng hợp",
-        budget: "Ngân sách",
-        report: "Báo cáo",
-        analysis: "Phân tích tài chính"
+        Dashboard: "Tổng quan",
+        Cash: "Tiền mặt",
+        Deposit: "Tiền gửi",
+        Buy: "Mua hàng",
+        Sell: "Bán hàng",
+        Invoice: "Quản lý hóa đơn",
+        Warehouse: "Kho",
+        Tool: "Công cụ dụng cụ",
+        Assets: "Tài sản cố định",
+        Tax: "Thuế",
+        Price: "Giá thành",
+        Sumary: "Tổng hợp",
+        Budget: "Ngân sách",
+        Report: "Báo cáo",
+        Analysis: "Phân tích tài chính"
     }
 
     static Gender = {
@@ -32,7 +32,7 @@ export default class ResourceVI {
     static PageSizeText = "bản ghi trên trang";
 
     //Các tùy chọn chức năng với đối tượng trong bảng.
-    static optionTexts = {
+    static OptionText = {
         Employee: [
             { optionId: 0, optionText: "Sửa", optionAction: "RequestEdit" },
             { optionId: 1, optionText: "Xóa", optionAction: "RequestDelete" },

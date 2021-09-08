@@ -275,7 +275,6 @@ export default {
      * CreatedBy: NHHung(30/08)
      **/
     onUpdatePagingInfo(pageNumber, pageSize) {
-      console.log(pageNumber, pageSize)
       this.pageNumber = pageNumber;
       this.pageSize = pageSize;
       this.filters = {

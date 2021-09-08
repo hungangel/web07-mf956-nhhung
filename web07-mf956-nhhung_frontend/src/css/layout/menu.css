@@ -1,6 +1,6 @@
     .menu-left {
         position: relative;
-        height: calc(100% - 0px);
+        height: calc(100vh - 0px);
         width: 178px;
         box-sizing: border-box;
         background-color: #393a3d;
