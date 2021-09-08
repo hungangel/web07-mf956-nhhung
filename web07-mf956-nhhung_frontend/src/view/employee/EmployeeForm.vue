@@ -387,9 +387,9 @@ export default {
 
         if (!hasErrorField && vm.formMode == FORM_MODE.Update) {
           formAction = formAction.replace("Save", "Update");
-          vm.doUpdateEntity(formAction);
+          await vm.doUpdateEntity(formAction);
         } else if (!hasErrorField) {
-          vm.doSaveEntity(formAction);
+          await vm.doSaveEntity(formAction);
         }
       } catch (error) {
         eventBus.$emit(
@@ -412,7 +412,7 @@ export default {
       let isModifiedForm = this.checkModifiedEntity();
 
       if (isModifiedForm) {
-        this.createPopupMessage("FULL", "CloseModifiedForm");
+        this.showPopupMessage("FULL", "CloseModifiedForm");
       } else {
         this.resetEntityData();
         this.$emit("hideAddForm");
@@ -467,15 +467,11 @@ export default {
         );
         if (!validateExistCode) {
           errorField = "validateFieldCode";
-          vm.createPopupMessage(
-            "NOTIFY",
-            "Duplicated",
-            vm.employee.EmployeeCode
-          );
+          vm.showPopupMessage("NOTIFY", "Duplicated", vm.employee.EmployeeCode);
           vm.$refs.validateFieldCode.errorCode = VALIDATE_CODE.Existed;
         }
       } else if (errorField && errorMessage) {
-        vm.createPopupMessage("ALERT", "ValidateOnSave", errorMessage, true);
+        vm.showPopupMessage("ALERT", "ValidateOnSave", errorMessage, true);
       }
       vm.firstErrorField = errorField;
       vm.firstErrorMessage = errorMessage;
@@ -684,9 +680,8 @@ export default {
       let vm = this;
       vm.resetEntityData();
       this.$emit("changeFormMode", FORM_MODE.Add);
-      if (formAction.includes("Close")) {
-        vm.$emit("hideAddForm");
-      } else {
+      if (formAction.includes("Close")) vm.$emit("hideAddForm");
+      else {
         (async () => {
           let newEntityCode = await vm.getNewEntityCode(),
             newEntity = {};
@@ -722,7 +717,7 @@ export default {
      * Tạo Message popup và hiển thị
      * CreatedBy: NHHung(05/09/2021)
      */
-    createPopupMessage(messageType, action, params, isCustomMessage) {
+    showPopupMessage(messageType, action, params, isCustomMessage) {
       if (!isCustomMessage) {
         let textBody = FormatFn.formatString(
             ResourceVI.PopupMessage[action],
@@ -742,10 +737,6 @@ export default {
           eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
         }, 200);
       }
-    },
-
-    showPopupMessage(message, action) {
-      eventBus.$emit("showPopupMessage", "FromAddForm", message, action);
     },
 
     /**
@@ -772,9 +763,7 @@ export default {
           textBody = ResourceVI.PopupMessage[actionResult];
         }
       }
-      this.createPopupMessage(messageType, textBody, "", true);
-      // let popupMessage = { messageType, textBody };
-      // this.showPopupMessage(popupMessage);
+      this.showPopupMessage(messageType, textBody, "", true);
     },
     //#endregion
 

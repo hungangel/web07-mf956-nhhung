@@ -1,15 +1,8 @@
 <template>
   <div class="top-cover" v-if="showLoadingScreen">
     <div class="top-cover-background"></div>
-    <div class="lds-roller">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="loader">
+      <img src="../../assets/loading.svg" alt="">
     </div>
   </div>
 </template>
