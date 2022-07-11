@@ -10,6 +10,9 @@
     <LoadingScreen />
     <PopupMessage />
     <ToastMessage />
+    <div>
+      avce
+    </div>
   </div>
 </template>
 
